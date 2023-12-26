@@ -23,7 +23,7 @@ public class Activity{
     private boolean requiresInsurance;
     private List<AddOn> addOns;
     private List<AddOn> displayAddOns;
-//    public Activity paperBridge, assaultCourse, cookery, hiking;
+//    public Activity paperBridge, assaultCourse, cookery, hiking; //Change it to one variable per declaration!! (Google style)
     
     //Add preset activity add-ons
     public AddOn insurance = new AddOn("Insurance", 2300, "activity");
@@ -31,7 +31,8 @@ public class Activity{
     public AddOn photography = new AddOn("Photography", 2500, "activity");
     
     // Parameterized constructor
-    public Activity(int baseCost, String title, int number, String description, String location, String dateTime, int duration, boolean requiresInsurance) {
+    public Activity(int baseCost, String title, int number, String description, 
+            String location, String dateTime, int duration, boolean requiresInsurance) {
         this.baseCost = baseCost;
         this.title = title;
         this.number = number;
@@ -191,7 +192,7 @@ public class Activity{
     }
     
     public void printAddOns(){
-        for(AddOn addOn : addOns){
+        for (AddOn addOn : addOns){
             System.out.println("addon name: " + addOn.getName());
         }
     }

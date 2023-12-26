@@ -28,17 +28,15 @@ public class Itinerary {
     Scanner scanner = new Scanner(System.in);
 
     public Itinerary() {
-        id = generateID(6);
-
+        id = generateId(6);
         activities = new ArrayList<>();
         addOns = new ArrayList<>();
         //idList = new ArrayList<>();
-
-        //idList.add(id); same reason as line 23
+        //idList.add(id); same reason as line 24
         System.out.println("Itinerary was created");
     }
 
-    public String getID() {
+    public String getId() {
         return id;
     }
 
@@ -49,7 +47,6 @@ public class Itinerary {
 
     public void clearItinerary() {
         activities.clear();
-
     }
 
     public void incuranceCheck() {
@@ -61,7 +58,8 @@ public class Itinerary {
                 if (activity.requiresInsurance() && !activity.containsInsurance()) {
                     OUTER:
                     while (true) {
-                        System.out.println(activity.getTitle() + " requires insurance. Please Select an option\n"
+                        System.out.println(activity.getTitle() + " requires insurance. "
+                                + "Please Select an option\n"
                                 + "1: Add Insurance for £20\n"
                                 + "2: Discard itinerary");
                         switch (scanner.nextInt()) {
@@ -161,7 +159,7 @@ public class Itinerary {
 
     }
 
-    private String generateID(int length) {//generate random string
+    private String generateId(int length) {//generate random string
         StringBuilder stringBuilder = new StringBuilder(length);
         for (int i = 0; i < length; i++) {
             int randomIndex = random.nextInt(CHARACTERS.length());

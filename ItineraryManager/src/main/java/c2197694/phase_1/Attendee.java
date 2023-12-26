@@ -40,10 +40,6 @@ public class Attendee {
         itineraries.add(itinerary);
     }
     
-//    public int calculateTotalCost(){
-//        return 0;
-//    }
-    
     public String getName() {
         return name;
     }

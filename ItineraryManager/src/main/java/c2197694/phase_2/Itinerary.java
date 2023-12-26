@@ -24,15 +24,14 @@ public class Itinerary {
     private List<AddOn> displayAddOns;
     private String id;
     //private List<String> idList; not used because one itinerary won't have multiple ID's//there will be an idList in itinerary class to handle dupes
-    private Attendee attendee;/*Not required by specs, i could just set an Attendee type
-    and write getter and setter but having an array list would look more consistant in the main method*/
+    private Attendee attendee;//Not required by specs, i could just set an Attendee type and write getter and setter but having an array list would look more consistant in the main method
 
     private LocalDateTime now = LocalDateTime.now();
     int day = now.getDayOfMonth();
     int month = now.getMonthValue();
     int year = now.getYear();
 
-//    //Add preset itinerary add-ons
+    //Add preset itinerary add-ons
     public AddOn accommodation = new AddOn("Accommodation", 2000, "itinerary");
     public AddOn teaBreaks = new AddOn("Tea break", 700, "itinerary");
     public AddOn lunch = new AddOn("Lunch", 2200, "itinerary");
@@ -40,7 +39,7 @@ public class Itinerary {
     Scanner scanner = new Scanner(System.in);
 
     public Itinerary() {
-        id = generateID(6);
+        id = generateId(6);
 
         activities = new ArrayList<>();
         addOns = new ArrayList<>();
@@ -56,7 +55,7 @@ public class Itinerary {
         this.addDisplayAddOns(lunch);
     }
 
-    public String getID() {
+    public String getId() {
         return id;
     }
 
@@ -141,7 +140,8 @@ public class Itinerary {
                 if (activity.requiresInsurance() && !activity.containsInsurance()) {
                     OUTER:
                     while (true) {
-                        System.out.println(activity.getTitle() + " requires insurance. Please Select an option\n"
+                        System.out.println(activity.getTitle() + " requires insurance. "
+                                + "Please Select an option\n"
                                 + "1: Add Insurance for £20\n"
                                 + "2: Discard itinerary");
                         switch (scanner.nextInt()) {
@@ -246,7 +246,7 @@ public class Itinerary {
 ////        clearItinerary();//As this method will be the last operation in an itenerary, calling displayCost() method will trigger clearing all the lists so issues with price calculation will not happen
 //        return itineraryCost;
 //    }
-    private String generateID(int length) {//generate random string//this function is private and there is a getter for it
+    private String generateId(int length) {//generate random string//this function is private and there is a getter for it
         StringBuilder stringBuilder = new StringBuilder(length);
         for (int i = 0; i < length; i++) {
             int randomIndex = random.nextInt(CHARACTERS.length());
@@ -393,7 +393,7 @@ public class Itinerary {
     public void printReceipt() {
         incuranceCheck();
         String initialSurname = getAttendeeInitialSurname();
-        String reference = getID();
+        String reference = getId();
         double itineraryCost = applyDiscount();
         String activitiesCountString = getStringNumber(activities.size());
         String attendeesCountString = getStringNumber(attendee.getMembers());
@@ -403,7 +403,8 @@ public class Itinerary {
         System.out.println("+===============================================================+");
         System.out.println("| Client: " + initialSurname + "\t\t\tRef: " + reference + "\t\t|");
         System.out.println("| Date: " + day + "/" + month + "/" + year + "\t\t\t\t\t\t|");
-        System.out.println("| Activities: " + activitiesCountString + "\t\t\tAttendees: " + attendeesCountString + "\t|");//do i store it somewhere first?
+        System.out.println("| Activities: " + activitiesCountString + "\t\t\tAttendees: " + 
+                attendeesCountString + "\t|");//do i store it somewhere first?
         System.out.println("|\t\t\t\t\t\t\t\t|");
         System.out.println("| Cost:\t£" + itineraryCost + "\t\t\t\t\t\t\t|");
         System.out.println("|\t\t\t\t\t\t\t\t|");
@@ -412,7 +413,8 @@ public class Itinerary {
         System.out.println("| Itinerary Add-ons\t\t\tSub-Total:\t£" + itineraryAddOnSubTotal + "\t|");
         for (AddOn addOn : addOns) {
             System.out.println("| - " + addOn.getName()
-                    + " @ £" + addOn.getCost() / 100 + " x " + attendee.getMembers() + " = £" + itineraryAddOnSubTotal + "\t\t\t\t|");
+                    + " @ £" + addOn.getCost() / 100 + " x " + attendee.getMembers() +
+                    " = £" + itineraryAddOnSubTotal + "\t\t\t\t|");
         }
         System.out.println("|\t\t\t\t\t\t\t\t|");
         int i = 0;
@@ -424,23 +426,29 @@ public class Itinerary {
             i++;
             int activityAddOnSubTotal = 0;//i cant reuse the calculateSubTotal() bcause in here it is separete activities and will be resetted after each loop
 //            activitySubTotal += activity.getBaseCost();
-            System.out.println("| " + i + ". " + activity.getTitle() + " @ £" + activity.getBaseCost() / 100 + " x" + attendee.getMembers() + " = £" + (activity.getBaseCost() * attendee.getMembers()) / 100 + "\t\t\t|");
+            System.out.println("| " + i + ". " + activity.getTitle() + 
+                    " @ £" + activity.getBaseCost() / 100 + " x" + attendee.getMembers() + 
+                    " = £" + (activity.getBaseCost() * attendee.getMembers()) / 100 + "\t\t\t|");
             activityAddOnSubTotal += activity.getBaseCost();
 
             List<AddOn> activityAddOns = activity.getAddOns();
 //            System.out.println("Number of add-ons: " + addOns1.size());//debug line
             for (AddOn addOn : activityAddOns) {
-                System.out.println("|\tAddOn: " + addOn.getName() + " @ £" + addOn.getCost() / 100 + " x" + attendee.getMembers() + " = £" + (addOn.getCost() * attendee.getMembers()) / 100 + "\t\t\t\t|");
+                System.out.println("|\tAddOn: " + addOn.getName() + 
+                        " @ £" + addOn.getCost() / 100 + " x" + attendee.getMembers() + 
+                        " = £" + (addOn.getCost() * attendee.getMembers()) / 100 + "\t\t\t\t|");
                 activityAddOnSubTotal += addOn.getCost();
             }
-            System.out.println("|\t\t\t\t\tSub-Total:\t£" + activityAddOnSubTotal * attendee.getMembers() / 100 + "\t|");
+            System.out.println("|\t\t\t\t\tSub-Total:\t£" + 
+                    activityAddOnSubTotal * attendee.getMembers() / 100 + "\t|");
         }
         System.out.println("|\t\t\t\t\t\t\t\t|");
 
         //System.out.println("| " + (100 - calculateDiscount()) + "% Discount\t\t\t\tTotal discount:\t£" + (((1 - (double) calculateDiscount() / 100) * itineraryCost)) / 100 + "\t|");
         double totalDiscount = calculateDiscountInPounds();
         String formattedTotalDiscount = String.format("%.1f", totalDiscount);// Format the total discount to display up to 1 digit after the decimal point
-        System.out.println("| " + (100 - calculateDiscountPercentage()) + "% Discount\t\t\t\tTotal discount:\t£" + formattedTotalDiscount + "\t|");
+        System.out.println("| " + (100 - calculateDiscountPercentage()) + "% Discount"
+                + "\t\t\t\tTotal discount:\t£" + formattedTotalDiscount + "\t|");
         System.out.println("+===============================================================+");
 
 //        System.out.println(calculateDiscount());

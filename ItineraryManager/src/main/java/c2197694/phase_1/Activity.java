@@ -26,7 +26,8 @@ public class Activity{
     public AddOn insurance = new AddOn("Insurance", 2300, "activity");
     
     // Parameterized constructor
-    public Activity(int baseCost, String title, int number, String description, String location, String dateTime, int duration, boolean requiresInsurance) {
+    public Activity(int baseCost, String title, int number, String description, String location, 
+            String dateTime, int duration, boolean requiresInsurance) {
         this.baseCost = baseCost;
         this.title = title;
         this.number = number;
@@ -38,7 +39,8 @@ public class Activity{
         this.addOns = new ArrayList<>();
     }
     
-    public Activity (Activity activity){//copy constructor
+    //copy constructor
+    public Activity (Activity activity){
         this.baseCost = activity.baseCost;
         this.title = activity.title;
         this.number = activity.number;
@@ -56,14 +58,14 @@ public class Activity{
 //                "Let bro cook", "Teesside University", "9th Dec 14:00", 3, false);
 //        this.hiking = new Activity(5900, "Hiking and nature walks", 4, 
 //                "Hiking time!", "North York Moors Park", "8th Dec 14:00", 6, true);
-        
     }
     
     public void addAddOn(AddOn addOn) {
         addOns.add(addOn);
     }
     
-    public void clearActivity(){//clear lists in activity class (addOns array list) which should stop adding addons to shared  activity objects causing issues with cost calculation for different customers
+    //clear lists in activity class (addOns array list) which should stop adding addons to shared  activity objects causing issues with cost calculation for different customers
+    public void clearActivity(){
         addOns.clear();
     }
     
@@ -76,7 +78,8 @@ public class Activity{
         return false; // Insurance add-on not found
     }
     
-    public int calculateCostWithAddOn(){/*this method calculates the cost for the activity + its addons and clears the activity list as this method is called in the final operations of a*/
+    //this method calculates the cost for the activity + its addons and clears the activity list as this method is called in the final operations of a
+    public int calculateCostWithAddOn(){
         int activityCost = this.getBaseCost();
 
         for (AddOn addOn : addOns) {

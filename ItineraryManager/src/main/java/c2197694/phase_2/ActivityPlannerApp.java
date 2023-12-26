@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 /**
  *
- * @author epico
+ * @author c2197694
  */
 public class ActivityPlannerApp {
 
@@ -104,13 +104,17 @@ public class ActivityPlannerApp {
 //        plannerApp.addAddOn(lunch);
         // Add preset/default activities (more activities may be added later
         Activity paperBridge = new Activity(1000, "Building a bridge from paper", 1,
-                "Let's build a bridge from paper!", "Teesside University", "16th Dec 15:00", 2, false);
+                "Let's build a bridge from paper!", "Teesside University",
+                "16th Dec 15:00", 2, false);
         Activity assaultCourse = new Activity(10000, "SAS-style assault courses", 2,
-                "Become stronks", "Saltburn", "15th Dec 7:00", 15, true);
+                "Become stronks", "Saltburn",
+                "15th Dec 7:00", 15, true);
         Activity cookery = new Activity(1700, "Cookery class", 3,
-                "Let bro cook", "Teesside University", "9th Dec 14:00", 3, false);
+                "Let bro cook", "Teesside University",
+                "9th Dec 14:00", 3, false);
         Activity hiking = new Activity(5900, "Hiking and nature walks", 4,
-                "Hiking time!", "North York Moors Park", "8th Dec 14:00", 6, true);
+                "Hiking time!", "North York Moors Park", 
+                "8th Dec 14:00", 6, true);
         plannerApp.addActivity(paperBridge);
         plannerApp.addActivity(assaultCourse);
         plannerApp.addActivity(cookery);
@@ -158,10 +162,14 @@ public class ActivityPlannerApp {
         while (true) {
             System.out.println("Does the attendee have personal insurance? (Yes/No)");
             String temporaryHasInsurance = scanner.nextLine();
-            if (temporaryHasInsurance.equalsIgnoreCase("Yes") || temporaryHasInsurance.equalsIgnoreCase("Y") || temporaryHasInsurance.equalsIgnoreCase("true")) {
+            if (temporaryHasInsurance.equalsIgnoreCase("Yes") || 
+                    temporaryHasInsurance.equalsIgnoreCase("Y") || 
+                    temporaryHasInsurance.equalsIgnoreCase("true")) {
                 hasInsurance = true;
                 break;
-            } else if (temporaryHasInsurance.equalsIgnoreCase("No") || temporaryHasInsurance.equalsIgnoreCase("N") || temporaryHasInsurance.equalsIgnoreCase("false")) {
+            } else if (temporaryHasInsurance.equalsIgnoreCase("No") || 
+                    temporaryHasInsurance.equalsIgnoreCase("N") || 
+                    temporaryHasInsurance.equalsIgnoreCase("false")) {
                 hasInsurance = false;
                 break;
             } else {
@@ -172,7 +180,8 @@ public class ActivityPlannerApp {
         System.out.println("Enter the number of attendees: ");
         int numbers = scanner.nextInt();
 
-        Attendee attendee = new Attendee(attendeeName, attendeeEmail, hasInsurance, numbers);
+        Attendee attendee = new Attendee(attendeeName, attendeeEmail, 
+                hasInsurance, numbers);
         itinerary.addAttendee(attendee);
 
         // Add activities to the itinerary
@@ -198,8 +207,8 @@ public class ActivityPlannerApp {
 
                 while (true) {
                     activity.displayAddOns();
-                    System.out.println("Please select an add-on for " + activity.getTitle() + ", "
-                            + "or enter 0 to proceed with no add-ons for this activity");
+                    System.out.println("Please select an add-on for " + activity.getTitle() +
+                            ", or enter 0 to proceed with no add-ons for this activity");
                     System.out.println("Enter add-on name: ");
                     String activityAddOnName = scanner.nextLine();
 
@@ -212,10 +221,12 @@ public class ActivityPlannerApp {
                         // If it exists, add the add-on to the activity
                         AddOn selectedAddOn = activity.getAddOnByName(activityAddOnName);
                         activity.addAddOn(selectedAddOn);
-                        System.out.println("Add-on " + activityAddOnName + " added to " + activity.getTitle());
+                        System.out.println("Add-on " + activityAddOnName + " added to " +
+                                activity.getTitle());
                     } else {
                         // If it doesn't exist, provide a hint for input
-                        System.out.println("Invalid add-on name. Please try again or enter 0 to proceed with no add-ons for this activity.");
+                        System.out.println("Invalid add-on name. Please try again or " +
+                                "enter 0 to proceed with no add-ons for this activity.");
                     }
                 }
 
@@ -227,7 +238,8 @@ public class ActivityPlannerApp {
         }itinerary.displayAddOns();
         while (true) {
             //if i try to put this before the while loop it glitches and doesnt take addon names correctly idk why <- bug case
-            System.out.println("Please select add-on(s) for your itinerary or enter 0 to proceed with no more add-ons for this itinerary.");
+            System.out.println("Please select add-on(s) for your itinerary or " +
+                    "enter 0 to proceed with no more add-ons for this itinerary.");
             String itineraryAddOnName = scanner.nextLine();
 
             if (itinerary.hasAddOn(itineraryAddOnName)) {
@@ -239,7 +251,8 @@ public class ActivityPlannerApp {
                 break;
             } else {
                 // If it doesn't exist, provide a hint for input
-                System.out.println("Invalid add-on name. Please try again or enter 0 to proceed with no add-ons for this activity.");
+                System.out.println("Invalid add-on name. Please try again " +
+                        "or enter 0 to proceed with no add-ons for this activity.");
             }
         }
 

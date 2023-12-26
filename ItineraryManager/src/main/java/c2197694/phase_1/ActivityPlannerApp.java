@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  *
- * @author epico
+ * @author c2197694
  */
 public class ActivityPlannerApp {
 
@@ -82,20 +82,25 @@ public class ActivityPlannerApp {
         
         // Add preset/default activities (more activities may be added later
         Activity paperBridge = new Activity(1000, "Building a bridge from paper", 1,
-                "Let's build a bridge from paper!", "Teesside University", "16th Dec 15:00", 2, false);    
+                "Let's build a bridge from paper!", "Teesside University",
+                "16th Dec 15:00", 2, false);    
         Activity assaultCourse = new Activity(10000, "SAS-style assault courses", 2,
-                "Become stronks", "Saltburn", "15th Dec 7:00", 15, true);
+                "Become stronks", "Saltburn",
+                "15th Dec 7:00", 15, true);
         Activity cookery = new Activity(1700, "Cookery class", 3,
-                "Let bro cook", "Teesside University", "9th Dec 14:00", 3, false);
+                "Let bro cook", "Teesside University",
+                "9th Dec 14:00", 3, false);
         Activity hiking = new Activity(5900, "Hiking and nature walks", 4, 
-                "Hiking time!", "North York Moors Park", "8th Dec 14:00", 6, true);
+                "Hiking time!", "North York Moors Park",
+                "8th Dec 14:00", 6, true);
         
         //add the activities to the instance of ActivityPlannerApp object -> no point rlly -> deleted 
         
 
         //actual sign up process (3 attendee 3 activities - group discount of 5% is applied)
         Itinerary itinerary1 = new Itinerary();//instantiate new itinerery 
-        Attendee attendee1 = new Attendee("Joe Biden", "jbiden@live.tees.ac.uk", true, 3);
+        Attendee attendee1 = new Attendee("Joe Biden", 
+                "jbiden@live.tees.ac.uk", true, 3);
         itinerary1.addAttendee(attendee1);
         itinerary1.addActivity(cookery);//£17 //add existing activity to the itinerary using addActivity class which uses an activity as it's paramete
         Activity paperBridge1 = new Activity(paperBridge);//copies activity from parent 
@@ -110,7 +115,8 @@ public class ActivityPlannerApp {
         //calling displayCost() clears the itinerary and activity array lists and make it ready for the next customer to customise their itinerary
 
         Itinerary itinerary2 = new Itinerary();
-        Attendee attendee2 = new Attendee("Josh Hutchinson", "jh1994@freemail", true, 1);
+        Attendee attendee2 = new Attendee("Josh Hutchinson", 
+                "jh1994@freemail", true, 1);
         itinerary2.addAttendee(attendee2);
         Activity assaultCourse2 = new Activity(assaultCourse);//copies activity from parent 
         assaultCourse2.addAddOn(insurance);//£23 //insurance needs to be added first so addActivity() wont panick seeing there is no insurance xD
@@ -123,8 +129,8 @@ public class ActivityPlannerApp {
         //test field
         System.out.println("----------------------TEST STUFF-----------------------");
 
-        System.out.println("Itinerary 1 ID: " + itinerary1.getID());
-        System.out.println("Itinerary 2 ID: " + itinerary2.getID());
+        System.out.println("Itinerary 1 ID: " + itinerary1.getId());
+        System.out.println("Itinerary 2 ID: " + itinerary2.getId());
 
         // Display available activities 
         plannerApp.displayActivities();
