@@ -4,41 +4,40 @@
  */
 package c2197694.phase_1;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
+ * Represents an attendee participating in activities.
+ * This class contains information about the attendee's name, contact information,
+ * insurance status, number of members, and a list of activities they are participating in.
  *
  * @author c2197694
  */
 public class Attendee {
     private String name;
     private String contactInfo;
-    private List<Activity> activities = new ArrayList<>();
-    private List<AddOn> addOns = new ArrayList<>();
-    private List<Itinerary> itineraries;
     private int members;
     private boolean hasInsurance; //does the attendee have a personal insurance that covers for the activity that require insurace 
     
+    /**
+     * Constructs an Attendee with the specified name, contact information,
+     * insurance status, and number of members.
+     * 
+     * @param name          The name of the attendee.
+     * @param contactInfo   The contact information of the attendee.
+     * @param hasInsurance  Whether the attendee has personal insurance or not. 
+     * @param members       The number of members in the attendee's group.
+     */
     public Attendee(String name, String contactInfo, boolean hasInsurance, int members){
         this.name = name;
         this.contactInfo = contactInfo;
         this.hasInsurance = hasInsurance;
         this.members = members;
-        this.itineraries = new ArrayList<>();
     }
     
-    public void addActivity(Activity activity){
-        activities.add(activity);
-    }
-    
-    public void addAddOn(AddOn addOn){
-        addOns.add(addOn);
-    }
-    
-    public void addItinenary(Itinerary itinerary){
-        itineraries.add(itinerary);
-    }
+    /**
+     * Generic getter methods.
+     * 
+     * @return Fields of this class.
+     */
     
     public String getName() {
         return name;
@@ -48,18 +47,6 @@ public class Attendee {
         return contactInfo;
     }
 
-    public List<Activity> getActivities() {
-        return activities;
-    }
-
-    public List<AddOn> getAddOns() {
-        return addOns;
-    }
-
-    public List<Itinerary> getItineraries() {
-        return itineraries;
-    }
-
     public int getMembers() {
         return members;
     }
@@ -67,6 +54,12 @@ public class Attendee {
     public boolean hasInsurance() {
         return hasInsurance;
     }
+    
+    /**
+     * Generic setter methods.
+     * 
+     * @param name & other class fields
+     */
 
     public void setName(String name) {
         this.name = name;
@@ -74,18 +67,6 @@ public class Attendee {
 
     public void setContactInfo(String contactInfo) {
         this.contactInfo = contactInfo;
-    }
-
-    public void setActivities(List<Activity> activities) {
-        this.activities = activities;
-    }
-
-    public void setAddOns(List<AddOn> addOns) {
-        this.addOns = addOns;
-    }
-
-    public void setItineraries(List<Itinerary> itineraries) {
-        this.itineraries = itineraries;
     }
 
     public void setMembers(int members) {

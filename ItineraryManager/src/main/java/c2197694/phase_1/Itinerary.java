@@ -25,6 +25,10 @@ public class Itinerary {
     private Attendee attendee;/*Not required by specs, i could just set an Attendee type
     and write getter and setter but having an array list would look more consistant in the main method*/
     
+    public AddOn accommodation = new AddOn("Accommodation", 2000, "itinerary");
+    public AddOn teaBreaks = new AddOn("Coffee/Tea breaks", 700, "itinerary");
+    public AddOn lunch = new AddOn("Lunch", 2200, "itinerary");
+    
     Scanner scanner = new Scanner(System.in);
 
     public Itinerary() {

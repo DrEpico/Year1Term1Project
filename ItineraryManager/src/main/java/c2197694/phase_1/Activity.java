@@ -8,11 +8,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * The "Activity" class represents an activity object within the itinerary manager program.
+ * Each activity has various attributes such as base cost, title, description, location, and duration.
+ * Activities may have associated add-on(s).
+ * 
+ * This class provides methods for processing information related to activity objects 
+ * and displaying them.
+ * 
  * @author c2197694
  */
 public class Activity{
-    //attributes
     private int baseCost;
     private String title;    
     private int number;
@@ -22,16 +27,34 @@ public class Activity{
     private int duration;
     private boolean requiresInsurance;
     private List<AddOn> addOns;
-    public Activity paperBridge, assaultCourse, cookery, hiking;
-    public AddOn insurance = new AddOn("Insurance", 2300, "activity");
     
-    // Parameterized constructor
+    /**
+     * Preset add-ons associated with activities.
+     * 
+     * Activity add-ons are instantiated in the Activity class.
+     */
+    public AddOn insurance = new AddOn("Insurance", 2300, "activity");
+    public AddOn travel = new AddOn("Travel", 2000, "activity");
+    public AddOn photography = new AddOn("Photography", 2500, "activity");
+    
+    /**
+     * Parameterized constructor for creating an activity.
+     * 
+     * @param baseCost          The base cost of the activity
+     * @param title             The title/name of the activity.
+     * @param number            The activity number/index.
+     * @param description       The description of the activity.
+     * @param location          The location of the activity.
+     * @param dateTime          The date and time of the activity.
+     * @param duration          The duration of the activity in hours.
+     * @param requiresInsurance A Boolean indicating whether insurance is required for the activity
+     */
     public Activity(int baseCost, String title, int number, String description, String location, 
             String dateTime, int duration, boolean requiresInsurance) {
         this.baseCost = baseCost;
         this.title = title;
         this.number = number;
-        this.description = description; // why this.? -> a copy of description variable for each instance
+        this.description = description; 
         this.location = location;
         this.dateTime = dateTime;
         this.duration = duration;
@@ -39,7 +62,16 @@ public class Activity{
         this.addOns = new ArrayList<>();
     }
     
-    //copy constructor
+    /**
+     * Copy activity constructor copies the original activity instance of an activity. 
+     * 
+     * This is the core solution to the problem where multiple itineraries shared the same activity
+     * instance and subsequently shared add-ons array list causing issues in itinerary cost calculation
+     * 
+     * Currently only 3 display add-ons are added to ALL activities. 
+     * 
+     * @param activity  The activity instance to be copied.
+     */
     public Activity (Activity activity){
         this.baseCost = activity.baseCost;
         this.title = activity.title;
@@ -50,27 +82,47 @@ public class Activity{
         this.duration = activity.duration;
         this.requiresInsurance = activity.requiresInsurance;
         this.addOns = new ArrayList<>();
-//        this.paperBridge = new Activity(1000, "Building a bridge from paper", 1,
-//                "Let's build a bridge from paper!", "Teesside University", "16th Dec 15:00", 2, false);
-//        this.assaultCourse = new Activity(10000, "SAS-style assault courses", 2,
-//                "Become stronks", "Saltburn", "15th Dec 7:00", 15, true);
-//        this.cookery = new Activity(1700, "Cookery class", 3,
-//                "Let bro cook", "Teesside University", "9th Dec 14:00", 3, false);
-//        this.hiking = new Activity(5900, "Hiking and nature walks", 4, 
-//                "Hiking time!", "North York Moors Park", "8th Dec 14:00", 6, true);
     }
     
+    /**
+     * Adds an add-on to the list of associated add-ons for the activity.
+     * 
+     * @param addOn The add-on instance to be added.
+     */
     public void addAddOn(AddOn addOn) {
         addOns.add(addOn);
     }
     
-    //clear lists in activity class (addOns array list) which should stop adding addons to shared  activity objects causing issues with cost calculation for different customers
+    /**
+     * Removes an add-on from the list of associated add-ons for the activity.
+     * 
+     * @param addOn The add-on instance to be removed.
+     */
+    public void removeAddOn(AddOn addOn) {
+        addOns.remove(addOn);
+    }
+    
+    /**
+     * Clears the list of add-ons associated with the activity.
+     * 
+     * This was a primary solution to the issue caused by shared activity instances.
+     * Currently not in use.
+     */
     public void clearActivity(){
         addOns.clear();
     }
     
+    /**
+     * Checks if the activity instance has an associated insurance add-on.
+     * 
+     * This method iterates through the list of add-ons associated with an activity
+     * instance to determine if there is an add-on with the name "Insurance."
+     * 
+     * @return {@code true} if the activity instance in the itinerary has an insurance 
+     * add-on, {@code false} otherwise.
+     */
     public boolean containsInsurance() {//currently not used
-        for (AddOn addOn: addOns) {
+        for (AddOn addOn : addOns) {
             if (addOn.getName().equalsIgnoreCase("Insurance")) {
                 return true; // Found an insurance add-on
             }
@@ -78,20 +130,38 @@ public class Activity{
         return false; // Insurance add-on not found
     }
     
-    //this method calculates the cost for the activity + its addons and clears the activity list as this method is called in the final operations of a
+    /**
+     * Calculates the total cost for the activity, including its base cost and associated add-ons.
+     * 
+     * The total cost is computed by summing the base cost of the activity and the costs of each 
+     * associated add-on.
+     * 
+     * @return The total cost of one activity instance with its associated add-ons.
+     */
     public int calculateCostWithAddOn(){
         int activityCost = this.getBaseCost();
 
         for (AddOn addOn : addOns) {
             activityCost+= addOn.getCost();
         }
-        clearActivity();
+//        clearActivity();
         return activityCost;
     }
     
+    /**
+     * Gets the list of add-ons associated with the specific instance of an activity.
+     * 
+     * @return The list of add-ons.
+     */
     public List<AddOn> getAddOns() {
         return addOns;
     }
+    
+    /**
+     * Generic getter methods.
+     * 
+     * @return Fields of this class.
+     */
     
     public int getBaseCost(){
         return baseCost;
@@ -125,6 +195,11 @@ public class Activity{
         return requiresInsurance;
     }
     
+    /**
+     * Generic setter methods.
+     * 
+     * @param baseCost & other class fields
+     */
     
      public void setBaseCost(int baseCost) {
         this.baseCost = baseCost;

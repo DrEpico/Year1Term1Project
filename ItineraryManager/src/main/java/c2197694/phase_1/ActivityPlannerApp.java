@@ -12,7 +12,6 @@ import java.util.List;
  * @author c2197694
  */
 public class ActivityPlannerApp {
-
     private List<Activity> activities;
     private List<AddOn> addOns;
     private List<Itinerary> iteneraries;
@@ -71,14 +70,14 @@ public class ActivityPlannerApp {
         ActivityPlannerApp plannerApp = new ActivityPlannerApp();  // Create an instance of ActivityPlannerApp
         
         //Add preset activity add-ons
-        AddOn insurance = new AddOn("Insurance", 2300, "activity");
-        AddOn travel = new AddOn("Travel", 2000, "activity");
-        AddOn photography = new AddOn("Photography", 2500, "activity");
+//        AddOn insurance = new AddOn("Insurance", 2300, "activity");
+//        AddOn travel = new AddOn("Travel", 2000, "activity");
+//        AddOn photography = new AddOn("Photography", 2500, "activity");
         
         //Add preset itinerary add-ons
-        AddOn accommodation = new AddOn("Accommodation", 2000, "itinerary");
-        AddOn teaBreaks = new AddOn("Coffee/Tea breaks", 700, "itinerary");
-        AddOn lunch = new AddOn("Lunch", 2200, "itinerary");
+//        AddOn accommodation = new AddOn("Accommodation", 2000, "itinerary");
+//        AddOn teaBreaks = new AddOn("Coffee/Tea breaks", 700, "itinerary");
+//        AddOn lunch = new AddOn("Lunch", 2200, "itinerary");
         
         // Add preset/default activities (more activities may be added later
         Activity paperBridge = new Activity(1000, "Building a bridge from paper", 1,
@@ -105,11 +104,11 @@ public class ActivityPlannerApp {
         itinerary1.addActivity(cookery);//£17 //add existing activity to the itinerary using addActivity class which uses an activity as it's paramete
         Activity paperBridge1 = new Activity(paperBridge);//copies activity from parent 
         itinerary1.addActivity(paperBridge1);//£10
-        paperBridge1.addAddOn(travel);//£20
+        paperBridge1.addAddOn(paperBridge1.travel);//£20
         Activity assaultCourse1 = new Activity(assaultCourse);//copies activity from parent a
-        assaultCourse1.addAddOn(insurance);//£23
+        assaultCourse1.addAddOn(assaultCourse1.insurance);//£23
         itinerary1.addActivity(assaultCourse1);//£100
-        itinerary1.addAddOn(accommodation);//£20
+        itinerary1.addAddOn(itinerary1.accommodation);//£20
         
         itinerary1.displayFinalCost();//should be £190 x 3 with 5% activity count discount = 180.5 -> £180
         //calling displayCost() clears the itinerary and activity array lists and make it ready for the next customer to customise their itinerary
@@ -119,9 +118,9 @@ public class ActivityPlannerApp {
                 "jh1994@freemail", true, 1);
         itinerary2.addAttendee(attendee2);
         Activity assaultCourse2 = new Activity(assaultCourse);//copies activity from parent 
-        assaultCourse2.addAddOn(insurance);//£23 //insurance needs to be added first so addActivity() wont panick seeing there is no insurance xD
+        assaultCourse2.addAddOn(assaultCourse2.insurance);//£23 //insurance needs to be added first so addActivity() wont panick seeing there is no insurance xD
         itinerary2.addActivity(assaultCourse2);//£100
-        itinerary2.addAddOn(travel);//£20
+        itinerary2.addAddOn(itinerary2.accommodation);//£20
         itinerary2.addActivity(hiking);//£59
         
         itinerary2.displayFinalCost();//should be £202
