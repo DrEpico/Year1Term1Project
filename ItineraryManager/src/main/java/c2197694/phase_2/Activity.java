@@ -8,29 +8,45 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * The "Activity" class represents an activity object within the itinerary manager program.
+ * Each activity has various attributes such as base cost, title, description, location, and duration.
+ * Activities may have associated add-on(s).
+ * 
+ * This class provides methods for processing information related to activity objects and displaying them.
+ * 
  * @author c2197694
  */
 public class Activity{
-    //attributes
     private int baseCost;
     private String title;    
-    private int number;
+    private final int number;
     private String description;
     private String location;
     private String dateTime;
     private int duration;
-    private boolean requiresInsurance;
+    private final boolean requiresInsurance;
     private List<AddOn> addOns;
     private List<AddOn> displayAddOns;
-//    public Activity paperBridge, assaultCourse, cookery, hiking; //Change it to one variable per declaration!! (Google style)
     
-    //Add preset activity add-ons
+    /**
+     * Preset add-ons associated with activities.
+     */
     public AddOn insurance = new AddOn("Insurance", 2300, "activity");
     public AddOn travel = new AddOn("Travel", 2000, "activity");
     public AddOn photography = new AddOn("Photography", 2500, "activity");
     
-    // Parameterized constructor
+    /**
+     * Parameterized constructor for creating an activity.
+     * 
+     * @param baseCost          The base cost of the activity
+     * @param title             The title/name of the activity.
+     * @param number            The activity number/index.
+     * @param description       The description of the activity.
+     * @param location          The location of the activity.
+     * @param dateTime          The date and time of the activity.
+     * @param duration          The duration of the activity in hours.
+     * @param requiresInsurance A Boolean indicating whether insurance is required for the activity
+     */
     public Activity(int baseCost, String title, int number, String description, 
             String location, String dateTime, int duration, boolean requiresInsurance) {
         this.baseCost = baseCost;
@@ -43,11 +59,16 @@ public class Activity{
         this.requiresInsurance = requiresInsurance;
         this.addOns = new ArrayList<>();
         this.displayAddOns = new ArrayList<>();
-//        this.addDisplayAddOns(insurance);
-//        this.addDisplayAddOns(travel);
-//        this.addDisplayAddOns(photography);
     }
     
+    /**
+     * Copy activity constructor copies the original activity instance of an activity. 
+     * 
+     * This is the core solution to the problem where multiple itineraries shared the same activity
+     * instance and subsequently shared add-ons array list causing issues in itinerary cost calculation
+     * 
+     * @param activity  The activity instance to be copied.
+     */
     public Activity (Activity activity){//copy constructor
         this.baseCost = activity.baseCost;
         this.title = activity.title;
@@ -62,29 +83,45 @@ public class Activity{
         this.addDisplayAddOns(insurance);
         this.addDisplayAddOns(travel);
         this.addDisplayAddOns(photography);
-//        this.paperBridge = new Activity(1000, "Building a bridge from paper", 1,
-//                "Let's build a bridge from paper!", "Teesside University", "16th Dec 15:00", 2, false);
-//        this.assaultCourse = new Activity(10000, "SAS-style assault courses", 2,
-//                "Become stronks", "Saltburn", "15th Dec 7:00", 15, true);
-//        this.cookery = new Activity(1700, "Cookery class", 3,
-//                "Let bro cook", "Teesside University", "9th Dec 14:00", 3, false);
-//        this.hiking = new Activity(5900, "Hiking and nature walks", 4, 
-//                "Hiking time!", "North York Moors Park", "8th Dec 14:00", 6, true);
     }
     
+    /**
+     * Adds an add-on to the list of associated add-ons for the activity.
+     * 
+     * @param addOn The add-on instance to be added.
+     */
     public void addAddOn(AddOn addOn) {
         addOns.add(addOn);
     }
     
+    /**
+     * Adds an add-on to the list of display add-ons for the activity.
+     *
+     * @param addOn The add-on to be added for display purposes.
+     */
     public void addDisplayAddOns(AddOn addOn){
         displayAddOns.add(addOn);
     }
     
-    public void clearActivity(){//clear lists in activity class (addOns array list) which should stop adding addons to shared  activity objects causing issues with cost calculation for different customers
-        addOns.clear();//not used rn
+    /**
+     * Clears the list of add-ons associated with the activity.
+     * 
+     * This was a primary solution to the issue caused by shared activity instances.
+     * Currently not in use.
+     */
+    public void clearActivity(){
+        addOns.clear();
     }
     
-    public boolean containsInsurance() {//currently not used
+    /**
+     * Checks if the activity instance has an associated insurance add-on.
+     * 
+     * This method iterates through the list of add-ons associated with an activity
+     * instance to determine if there is an add-on with the name "Insurance."
+     * 
+     * @return {@code true} if the activity instance in the itinerary has an insurance add-on, {@code false} otherwise.
+     */
+    public boolean containsInsurance() {
         for (AddOn addOn: addOns) {
             if (addOn.getName().equalsIgnoreCase("Insurance")) {
                 return true; // Found an insurance add-on
@@ -93,16 +130,29 @@ public class Activity{
         return false; // Insurance add-on not found
     }
     
-    public int calculateCostWithAddOn(){/*this method calculates the cost for the activity + its addons and clears the activity list as this method is called in the final operations of a*/
+    /**
+     * Calculates the total cost for the activity, including its base cost and associated add-ons.
+     * 
+     * The total cost is computed by summing the base cost of the activity and the costs of each 
+     * associated add-on.
+     * 
+     * @return The total cost of one activity instance with its associated add-ons.
+     */
+    public int calculateCostWithAddOn(){
         int activityCost = this.getBaseCost();
 
         for (AddOn addOn : addOns) {
             activityCost+= addOn.getCost();
         }
-//        clearActivity();
         return activityCost;
     }
     
+    /**
+     * Displays a list of available add-ons for user on command line.
+     * 
+     * This method is useful for presenting the details of the add-ons in a user-friendly format.
+     * The information displayed includes the name (title) and cost of each add-on, separated by a line.
+     */
     public void displayAddOns() {
         for (AddOn addOn : displayAddOns) {
             System.out.println("Title: " + addOn.getName());
@@ -111,6 +161,15 @@ public class Activity{
         }
     }
     
+    /**
+     * Checks if the activity has an add-on with the specified name.
+     * 
+     * This method iterates through the list of display add-ons associated with the activity
+     * to determine if there is an add-on with a name that matches the specified name (case-insensitive).
+     * 
+     * @param addOnName The name of the add-on to check for.
+     * @return {@code true} if the activity has an add-on with the specified name, {@code false} otherwise.
+     */
     public boolean hasAddOn(String addOnName) {
         for (AddOn addOn : displayAddOns) {
             if (addOn.getName().equalsIgnoreCase(addOnName)) {
@@ -121,15 +180,28 @@ public class Activity{
         return false;
     }
     
+    /**
+     * Retrieves an add-on associated with the activity based on its name.
+     * 
+     * This method iterates through the list of display add-ons to find the add-on
+     * with a name that matches the specified name (case-insensitive).
+     * 
+     * @param addOnName The name of the add-on to retrieve. 
+     * @return The add-on with the specified name, or {@code null} if not found.
+     */
     public AddOn getAddOnByName(String addOnName) {
         for (AddOn addOn : displayAddOns) {
             if (addOn.getName().equalsIgnoreCase(addOnName)) {
                 return addOn;
             }
         }
-        return null; // Return null if the add-on with the specified name is not found
+        return null;
     }
     
+    /**
+     * 
+     * @return 
+     */
     public List<AddOn> getAddOns() {
         return addOns;
     }
@@ -191,6 +263,9 @@ public class Activity{
         this.duration = duration;
     }
     
+    /**
+     * This method was used for printing all the addOns inside 
+     */
     public void printAddOns(){
         for (AddOn addOn : addOns){
             System.out.println("addon name: " + addOn.getName());
