@@ -4,9 +4,9 @@
  */
 package c2197694.phase_1;
 
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 
 /**
@@ -15,63 +15,172 @@ import java.util.Scanner;
  */
 public class Itinerary {
 
-    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    private static final SecureRandom random = new SecureRandom();
+    /**
+     * Constant strings representing all letters and numbers that can be used in
+     * generateRandomString() method.
+     *
+     * Random object instead of SecureRandom that is cryptographically stronger
+     * than Random but slower as well. So for the purpose of itinerary ID
+     * generation in this project, Random is more suitable
+     */
+    private static final String LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private static final String NUMBERS = "0123456789";
+    private static final Random random = new Random();
 
+    /**
+     * Lists of objects associated with Itinerary class such as activities and
+     * itinerary addOns.
+     */
     private List<Activity> activities;
     private List<AddOn> addOns;
     private String id;
-    //private List<String> idList; not used because one itinerary won't have multiple ID's
-    private Attendee attendee;/*Not required by specs, i could just set an Attendee type
-    and write getter and setter but having an array list would look more consistant in the main method*/
-    
+    private Attendee attendee;
+
+    /**
+     * Preset add-ons associated with itinerary.
+     *
+     * Itinerary add-ons are instantiated in the Itinerary class.
+     */
     public AddOn accommodation = new AddOn("Accommodation", 2000, "itinerary");
     public AddOn teaBreaks = new AddOn("Coffee/Tea breaks", 700, "itinerary");
     public AddOn lunch = new AddOn("Lunch", 2200, "itinerary");
-    
+
     Scanner scanner = new Scanner(System.in);
 
+    /**
+     * Constructs a new Itinerary. Generates a unique identifier, initializes
+     * empty lists for activities and add-ons, and prints a message indicating
+     * the creation of the itinerary.
+     */
     public Itinerary() {
-        id = generateId(6);
+        id = generateId();
         activities = new ArrayList<>();
         addOns = new ArrayList<>();
-        //idList = new ArrayList<>();
-        //idList.add(id); same reason as line 24
         System.out.println("Itinerary was created");
     }
 
+    /**
+     * This method generated a random string of characters from specified pool.
+     * The method will then be called in {@link #generateId()} with specific
+     * instructions via parameters.
+     *
+     * @param characters Either LETTERS or NUMBERS constant string
+     * @param length The length of the random string to generate.
+     * @return A random string of the specified length.
+     */
+    private String generateRandomString(String characters, int length) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            int randomIndex = random.nextInt(characters.length());
+            stringBuilder.append(characters.charAt(randomIndex));
+        }
+        return stringBuilder.toString();
+    }
+
+    /**
+     * Generates a random itinerary reference by concatenating two random
+     * letters, three random digits, and one random letter.
+     *
+     * @return A random itinerary reference.
+     */
+    public final String generateId() {
+        // Generate two random letters
+        String randomLetters = generateRandomString(LETTERS, 2);
+
+        // Generate three random digits
+        String randomDigits = generateRandomString(NUMBERS, 3);
+
+        // Generate one random letter
+        String randomLastLetter = generateRandomString(LETTERS, 1);
+
+        // Concatenate the parts to form the itinerary reference
+        return randomLetters + randomDigits + randomLastLetter;
+    }
+
+    /**
+     * Simple getter method.
+     *
+     * Gets reference code of the itinerary.
+     *
+     * @return The itinerary ID.
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     * Adds an activity instance to the activities array list.
+     *
+     * @param activity The activity to be added to the list.
+     */
     public void addActivity(Activity activity) {
         activities.add(activity);
         System.out.println(activity.getTitle() + " was added to the itinerary");
     }
 
-    public void clearItinerary() {
-        activities.clear();
+    /**
+     * Adds an itinerary add-on to the list of itinerary add-ons.
+     *
+     * @param addOn The itinerary add-on to be added.
+     */
+    public void addAddOn(AddOn addOn) {//adds itinerary addons
+        addOns.add(addOn);
     }
 
+    /**
+     * Sets the attendee for this itinerary.
+     *
+     * @param attendee The attendee to be associated with this itinerary.
+     */
+    public void addAttendee(Attendee attendee) {
+        this.attendee = attendee;
+    }
+
+    /**
+     * Checks if attendee has a personal insurance that covers for the activity
+     * that requires insurance based on the company rules.
+     *
+     * If an activity requires insurance and user doesn't have personal
+     * insurance, user will be prompted if they want to add insurance add-on
+     * provided or delete the activity from the itinerary if they disagree with
+     * the company rule and don't want to take any form of insurance. Ultimately
+     * users have the choice to discard the entire itinerary if they choose to
+     * do so.
+     *
+     * If user chose to remove the activity from itinerary, the activity object
+     * will be stored in activityToRemoved variable and removeActivity() method
+     * will be called outside of the loop to avoid
+     * ConcurrentModificationException for directly modifying the collection
+     * inside the loop.
+     *
+     * Boolean "shouldRemove" is introduced to remove an activity only if that
+     * option is selected to avoid unexpected behavior for removing null from
+     * the activities list.
+     */
     public void incuranceCheck() {
-        if (attendee.hasInsurance()) {//checks if attendee has personal insurance
-            //might do something in here idk
-        } else {//if they dont...
-//            boolean insuranceRequired = false;//
+        Activity activityToRemove = null;
+        boolean shouldRemove = false;
+        if (!attendee.hasInsurance()) {
             for (Activity activity : activities) {
                 if (activity.requiresInsurance() && !activity.containsInsurance()) {
                     OUTER:
                     while (true) {
-                        System.out.println(activity.getTitle() + " requires insurance. "
+                        System.out.println(activity.getTitle() + " requires insurance. \n"
                                 + "Please Select an option\n"
-                                + "1: Add Insurance for £20\n"
-                                + "2: Discard itinerary");
+                                + "1: Add Insurance for £" + activity.insurance.getCost() / 100 + "\n"
+                                + "2: Remove " + activity.getTitle() + " from the itinerary\n"
+                                + "3: Discard itinerary");
                         switch (scanner.nextInt()) {
                             case 1:
                                 activity.addAddOn(activity.insurance);
                                 System.out.println("Insurance addOn was added");
                                 break OUTER;
                             case 2:
+                                shouldRemove = true;
+                                activityToRemove = activity;//Stores activity to be removed
+                                System.out.println("The activity was deleted from the itinerary");
+                                break OUTER;
+                            case 3:
                                 System.out.println("Discarding the process...");
                                 System.exit(0);
                                 break OUTER;
@@ -83,34 +192,32 @@ public class Itinerary {
                 }
             }
         }
+        //direct modification of the list outside of any iteration
+        if (shouldRemove == true) {
+            removeActivity(activityToRemove);
+        }
     }
 
-//    public boolean ContainsInsurance() {//insurance is an activity addon. what even is this method lmao
-//        for (AddOn addOn : addOns) {
-//            if (addOn.getName().equalsIgnoreCase("Insurance")) {
-//                return true; // Found an insurance add-on
-//            }
-//        }
-//        return false; // Insurance add-on not found
-//    }
-    public void addAddOn(AddOn addOn) {
-//        if (addOn.getType().equalsIgnoreCase("itinerary")) {
-        addOns.add(addOn);
-//            System.out.println(addOn.getName() + " was added to the itinerary (itinerary addon)");
-//        } else if (addOn.getType().equalsIgnoreCase("activity")) {
-//            activityAddOns.add(addOn);
-//            System.out.println(addOn.getName()+ " was added to the itinerary (activity addon)");//
-//        }
+    /**
+     * Removes the specified activity from the list of activities associated
+     * with the itinerary.
+     *
+     * @param activity The activity to be removed from the itinerary.
+     */
+    public void removeActivity(Activity activity) {
+        activities.remove(activity);
     }
 
-    public void addAttendee(Attendee attendee) {
-        this.attendee = attendee;
-    }
-//
-//    public List<Attendee> getAttendeeList() {
-//        return attendeeList;
-//    }
-
+    /**
+     * Calculates the total cost for the itinerary.
+     *
+     * This method iterates over activities list and gets the cost of each
+     * activity with its add-ons by calling calculateCostWithAddOn() from
+     * activity class. Then cost of itinerary add-ons will be accumulated to
+     * totalCost local variable.
+     *
+     * @return
+     */
     private int calculateCost() {
         int totalCost = 0;
         for (Activity activity : activities) {
@@ -120,14 +227,23 @@ public class Itinerary {
             totalCost += addOn.getCost();
         }
 
-        int totalDiscount = calculateDiscount(); // Pass attendee as a parameter (required to know the members value)
+        int totalDiscount = calculateDiscount(); 
         totalCost = (totalCost * totalDiscount) / 100;
         return totalCost;
     }
 
-    private int calculateDiscount() {//splitted the discount calculatin logic from total cost calculation
+    /**
+     * Calculates the discount value but in base format for further
+     * calculations. This is due to different methods requiring different
+     * formats and this method is a capsulation that can be used in different
+     * ways.
+     *
+     * @return Base discount value.
+     */
+    private int calculateDiscount() {
+        //splitted the discount calculatin logic from total cost calculation
         int attendeeDiscount = 0;
-
+        
         if (attendee.getMembers() >= 10 && attendee.getMembers() < 20) {
             attendeeDiscount = 5;
         } else if (attendee.getMembers() >= 20) {
@@ -149,36 +265,18 @@ public class Itinerary {
         return totalDiscount;
     }
 
+    /**
+     * Displays the final cost of the itinerary, considering insurance checks,
+     * individual attendee costs, and the total cost for the entire itinerary.
+     *
+     * @return The total cost of the itinerary in pence.
+     */
     public int displayFinalCost() {
         incuranceCheck();
-        int itineraryCost = calculateCost() /**
-                 * attendee.getMembers()
-                 */
-                ;
-        /*= calculatedCost * attendee.getMembers();*/ //price multiplied by members logic diabled for now //not disabled anymore
-        System.out.println("Itinerary cost for " + attendee.getName() + ": £" + itineraryCost / 100);
-//        clearItinerary();//As this method will be the last operation in an itenerary, calling displayCost() method will trigger clearing all the lists so issues with price calculation will not happen
+        int itineraryCost = calculateCost() * attendee.getMembers();
+        System.out.println("Itinerary cost for " + attendee.getName() 
+                + ": £" + itineraryCost / 100);
         System.out.println();
         return itineraryCost;
-
     }
-
-    private String generateId(int length) {//generate random string
-        StringBuilder stringBuilder = new StringBuilder(length);
-        for (int i = 0; i < length; i++) {
-            int randomIndex = random.nextInt(CHARACTERS.length());
-            char randomChar = CHARACTERS.charAt(randomIndex);
-            stringBuilder.append(randomChar);
-        }
-        id = stringBuilder.toString();
-        return id;//TODO:check if it's unique!
-    }
-
-    //TODO/note: generate receipt storing the first member in attendee arrayList as lead attendee
-    //save for later: insurance check
-//    if (activity.requiresInsurance() && !containsInsurance() && activity.containsInsurance() && !attendee.hasInsurance()) {
-//            // Handle the case where insurance is required but not present in the itinerary
-//            System.out.println("Insurance is required for adding " + activity.getTitle() + " to this itinerary");
-//            return;  // Do not add the activity to the itinerary 
-//        }
 }

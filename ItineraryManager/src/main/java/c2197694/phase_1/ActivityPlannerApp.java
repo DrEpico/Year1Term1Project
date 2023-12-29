@@ -13,18 +13,28 @@ import java.util.List;
  */
 public class ActivityPlannerApp {
     private List<Activity> activities;
-    private List<AddOn> addOns;
     private List<Itinerary> iteneraries;
-
+    
+    private static Activity paperBridge = new Activity(1000, "Building a bridge from paper",
+            1, "Let's build a bridge from paper!", "Teesside University",
+                "16th Dec 15:00", 2, false);    
+    private static Activity assaultCourse = new Activity(10000, "SAS-style assault courses", 
+            2, "Become stronks", "Saltburn",
+                "15th Dec 7:00", 15, true);
+    private static Activity cookery = new Activity(1700, "Cookery class", 
+            3, "Let bro cook", "Teesside University",
+                "9th Dec 14:00", 3, false);
+    private static Activity hiking = new Activity(5900, "Hiking and nature walks", 
+            4, "Hiking time!", "North York Moors Park",
+                "8th Dec 14:00", 6, true);
+    
     public ActivityPlannerApp() {
         this.activities = new ArrayList<>();
-        this.addOns = new ArrayList<>();
-        
     }
 
     public void addActivity(Activity activity) {
         activities.add(activity);
-
+        System.out.println(activity.getTitle() + " was added to the itinerary");
     }
 
     public void displayActivities() {
@@ -40,58 +50,16 @@ public class ActivityPlannerApp {
         }
     }
 
-    public void addAddOn(AddOn addOn) {
-        addOns.add(addOn);
-    }
-
     public void addItinenary(Itinerary itinerary) {
         iteneraries.add(itinerary);
     }
-
-    public int calculateTotalCost() {
-        return 0;
-    }
-
-    public List<Activity> getActivity() {
-        return activities;
-    }
-    
-//   public void clearLists(Activity activity, Itinerary itinerary){
-//       activity.clearActivity();
-//       itinerary.clearItinerary();
-//   }
-
-//    public void setActivity(List<Activity> activity) {
-//        this.activity = activity;
-//    } I don't think this is necessary or will be used (addActivity exists)
     
     public static void main(String[] args) {
         //product 
         ActivityPlannerApp plannerApp = new ActivityPlannerApp();  // Create an instance of ActivityPlannerApp
         
-        //Add preset activity add-ons
-//        AddOn insurance = new AddOn("Insurance", 2300, "activity");
-//        AddOn travel = new AddOn("Travel", 2000, "activity");
-//        AddOn photography = new AddOn("Photography", 2500, "activity");
-        
-        //Add preset itinerary add-ons
-//        AddOn accommodation = new AddOn("Accommodation", 2000, "itinerary");
-//        AddOn teaBreaks = new AddOn("Coffee/Tea breaks", 700, "itinerary");
-//        AddOn lunch = new AddOn("Lunch", 2200, "itinerary");
-        
         // Add preset/default activities (more activities may be added later
-        Activity paperBridge = new Activity(1000, "Building a bridge from paper", 1,
-                "Let's build a bridge from paper!", "Teesside University",
-                "16th Dec 15:00", 2, false);    
-        Activity assaultCourse = new Activity(10000, "SAS-style assault courses", 2,
-                "Become stronks", "Saltburn",
-                "15th Dec 7:00", 15, true);
-        Activity cookery = new Activity(1700, "Cookery class", 3,
-                "Let bro cook", "Teesside University",
-                "9th Dec 14:00", 3, false);
-        Activity hiking = new Activity(5900, "Hiking and nature walks", 4, 
-                "Hiking time!", "North York Moors Park",
-                "8th Dec 14:00", 6, true);
+        
         
         //add the activities to the instance of ActivityPlannerApp object -> no point rlly -> deleted 
         
