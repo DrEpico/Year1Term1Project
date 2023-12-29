@@ -9,27 +9,48 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
+ * The "ActivityPlannerApp" class represents an application for planning and managing activities and itineraries.
  *
  * @author c2197694
  */
 public class ActivityPlannerApp {
-
+    /**
+     * List of 
+     */
     private List<Activity> activities;//list of available activities. selected activities will be added to the arraylist in itinerary class to be handled by that
-    private List<AddOn> addOns = new ArrayList<>();
+    private List<AddOn> addOns;
     private List<Itinerary> iteneraries;//list of user itinearies already created
-    private static Attendee attendee;
+    private static Activity activity;
+//    private static Attendee attendee; //not used
 
-    private Itinerary itinerary;
-    private Activity activity;
+//    private Itinerary itinerary;
+//    private Activity activity; //not used
 
     //Add preset itinerary add-ons
 //    public AddOn accommodation = new AddOn("Accommodation", 2000, "itinerary");
 //    public AddOn teaBreaks = new AddOn("Tea break", 700, "itinerary");
 //    public AddOn lunch = new AddOn("Lunch", 2200, "itinerary");
+    
+    Activity paperBridge = new Activity(1000, "Building a bridge from paper", 1,
+            "Let's build a bridge from paper!", "Teesside University",
+            "16th Dec 15:00", 2, false);
+    Activity assaultCourse = new Activity(10000, "SAS-style assault courses", 2,
+            "Become stronks", "Saltburn",
+            "15th Dec 7:00", 15, true);
+    Activity cookery = new Activity(1700, "Cookery class", 3,
+            "Let bro cook", "Teesside University",
+            "9th Dec 14:00", 3, false);
+    Activity hiking = new Activity(5900, "Hiking and nature walks", 4,
+            "Hiking time!", "North York Moors Park", 
+            "8th Dec 14:00", 6, true);
+    
     public ActivityPlannerApp() {
         this.activities = new ArrayList<>();
         this.addOns = new ArrayList<>();
-
+        this.addActivity(paperBridge);
+        this.addActivity(assaultCourse);
+        this.addActivity(cookery);
+        this.addActivity(hiking);
 //        addAddOn(accommodation);
 //        addAddOn(teaBreaks);
 //        addAddOn(lunch);
@@ -119,7 +140,7 @@ public class ActivityPlannerApp {
         plannerApp.addActivity(assaultCourse);
         plannerApp.addActivity(cookery);
         plannerApp.addActivity(hiking);
-
+        
         OUTER:
         while (true) {
             System.out.println("1. Display All Activities");
@@ -235,7 +256,8 @@ public class ActivityPlannerApp {
                 System.out.println("Invalid activity number. Please try again.");
             }
 
-        }itinerary.displayAddOns();
+        }
+        itinerary.displayAddOns();
         while (true) {
             //if i try to put this before the while loop it glitches and doesnt take addon names correctly idk why <- bug case
             System.out.println("Please select add-on(s) for your itinerary or " +
