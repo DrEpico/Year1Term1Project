@@ -20,17 +20,16 @@ public class ActivityPlannerApp {
     private List<Activity> activities;//list of available activities. selected activities will be added to the arraylist in itinerary class to be handled by that
     private List<AddOn> addOns;
     private List<Itinerary> iteneraries;//list of user itinearies already created
-    private static Activity activity;
+//    private static Activity activity;
 //    private static Attendee attendee; //not used
 
 //    private Itinerary itinerary;
 //    private Activity activity; //not used
-
-    //Add preset itinerary add-ons
-//    public AddOn accommodation = new AddOn("Accommodation", 2000, "itinerary");
-//    public AddOn teaBreaks = new AddOn("Tea break", 700, "itinerary");
-//    public AddOn lunch = new AddOn("Lunch", 2200, "itinerary");
     
+    /**
+     * Available activities are declared and initialised in this 
+     * activity planner app for higher relevancy
+     */
     Activity paperBridge = new Activity(1000, "Building a bridge from paper", 1,
             "Let's build a bridge from paper!", "Teesside University",
             "16th Dec 15:00", 2, false);
@@ -51,12 +50,9 @@ public class ActivityPlannerApp {
         this.addActivity(assaultCourse);
         this.addActivity(cookery);
         this.addActivity(hiking);
-//        addAddOn(accommodation);
-//        addAddOn(teaBreaks);
-//        addAddOn(lunch);
     }
 
-    public void addActivity(Activity activity) {
+    public final void addActivity(Activity activity) {
         activities.add(activity);
     }
 
@@ -68,7 +64,7 @@ public class ActivityPlannerApp {
             System.out.println("Location: " + activity.getLocation());
             System.out.println("DateTime: " + activity.getDateTime());
             System.out.println("Duration: " + activity.getDuration() + " hours");
-            System.out.println("Base Cost: " + activity.getBaseCost());
+            System.out.println("Base Cost: £" + activity.getBaseCost()/100);
             System.out.println("--------------------------------------");
         }
     }
@@ -124,22 +120,22 @@ public class ActivityPlannerApp {
 //        plannerApp.addAddOn(teaBreaks);
 //        plannerApp.addAddOn(lunch);
         // Add preset/default activities (more activities may be added later
-        Activity paperBridge = new Activity(1000, "Building a bridge from paper", 1,
-                "Let's build a bridge from paper!", "Teesside University",
-                "16th Dec 15:00", 2, false);
-        Activity assaultCourse = new Activity(10000, "SAS-style assault courses", 2,
-                "Become stronks", "Saltburn",
-                "15th Dec 7:00", 15, true);
-        Activity cookery = new Activity(1700, "Cookery class", 3,
-                "Let bro cook", "Teesside University",
-                "9th Dec 14:00", 3, false);
-        Activity hiking = new Activity(5900, "Hiking and nature walks", 4,
-                "Hiking time!", "North York Moors Park", 
-                "8th Dec 14:00", 6, true);
-        plannerApp.addActivity(paperBridge);
-        plannerApp.addActivity(assaultCourse);
-        plannerApp.addActivity(cookery);
-        plannerApp.addActivity(hiking);
+//        Activity paperBridge = new Activity(1000, "Building a bridge from paper", 1,
+//                "Let's build a bridge from paper!", "Teesside University",
+//                "16th Dec 15:00", 2, false);
+//        Activity assaultCourse = new Activity(10000, "SAS-style assault courses", 2,
+//                "Become stronks", "Saltburn",
+//                "15th Dec 7:00", 15, true);
+//        Activity cookery = new Activity(1700, "Cookery class", 3,
+//                "Let bro cook", "Teesside University",
+//                "9th Dec 14:00", 3, false);
+//        Activity hiking = new Activity(5900, "Hiking and nature walks", 4,
+//                "Hiking time!", "North York Moors Park", 
+//                "8th Dec 14:00", 6, true);
+//        plannerApp.addActivity(paperBridge);
+//        plannerApp.addActivity(assaultCourse);
+//        plannerApp.addActivity(cookery);
+//        plannerApp.addActivity(hiking);
         
         OUTER:
         while (true) {
@@ -257,7 +253,7 @@ public class ActivityPlannerApp {
             }
 
         }
-        itinerary.displayAddOns();
+        itinerary.displayAddOn();
         while (true) {
             //if i try to put this before the while loop it glitches and doesnt take addon names correctly idk why <- bug case
             System.out.println("Please select add-on(s) for your itinerary or " +
@@ -284,6 +280,7 @@ public class ActivityPlannerApp {
         itinerary.printReceipt();
 
     }
+    
 
 }
 //TODO display available itinerary addons and activity addons

@@ -4,89 +4,204 @@
  */
 package c2197694.phase_2;
 
-import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 
 /**
+ * The Itinerary class represents an itinerary for a series of activities and
+ * associated add-ons. It includes methods to calculate costs, apply discounts,
+ * and generate a receipt for the itinerary.
  *
  * @author c2197694
  */
 public class Itinerary {
 
-    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    private static final SecureRandom random = new SecureRandom();
+    /**
+     * Constant strings representing all letters and numbers that can be used in
+     * {@link #generateRandomString()} method, which will then be called in 
+     * {@link #generateId()} method to create itinerary ID.
+     *
+     * Random object instead of SecureRandom that is cryptographically stronger than Random
+     * but slower as well. So for the purpose of itinerary ID generation in this project,
+     * Random is more suitable
+     */
+    private static final String LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private static final String NUMBERS = "0123456789";
+    private static final Random random = new Random();
 
+    /**
+     * Lists of objects associated with Itinerary class such as activities and
+     * itinerary addOns.
+     */
     private List<Activity> activities;
-    private List<AddOn> addOns;//this is a list for itinerary addons! NOT activity addons!
+    private List<AddOn> addOns;
     private List<AddOn> displayAddOns;
     private String id;
-    //private List<String> idList; not used because one itinerary won't have multiple ID's//there will be an idList in itinerary class to handle dupes
-    private Attendee attendee;//Not required by specs, i could just set an Attendee type and write getter and setter but having an array list would look more consistant in the main method
+    private Attendee attendee;
 
+    /**
+     * These lines get the current day, month and year then store them in
+     * variables to be used later in {@link #printReceipt()} function.
+     */
     private LocalDateTime now = LocalDateTime.now();
     int day = now.getDayOfMonth();
     int month = now.getMonthValue();
     int year = now.getYear();
 
-    //Add preset itinerary add-ons
+    /**
+     * Preset add-ons associated with itinerary.
+     *
+     * Itinerary add-ons are instantiated in the Itinerary class.
+     */
     public AddOn accommodation = new AddOn("Accommodation", 2000, "itinerary");
     public AddOn teaBreaks = new AddOn("Tea break", 700, "itinerary");
     public AddOn lunch = new AddOn("Lunch", 2200, "itinerary");
-    
+
     Scanner scanner = new Scanner(System.in);
 
+    /**
+     * Constructs a new Itinerary object with a randomly generated ID and
+     * initializes the lists for activities, itinerary add-ons.
+     *
+     * Additionally, it adds preset display add-ons such as accommodation, tea
+     * breaks, and lunch to the display add-ons list.
+     *
+     * The ID is generated using the {@link #generateReference()} method.
+     */
     public Itinerary() {
-        id = generateId(6);
+        id = generateId();
 
         activities = new ArrayList<>();
         addOns = new ArrayList<>();
         displayAddOns = new ArrayList<>();
 
-        //idList = new ArrayList<>();
-        //idList.add(id); same reason as line 23
-//        addAddOn(accommodation);
-//        addAddOn(teaBreaks);
-//        addAddOn(lunch);
         this.addDisplayAddOns(accommodation);
         this.addDisplayAddOns(teaBreaks);
         this.addDisplayAddOns(lunch);
     }
 
+    /**
+     * This method generated a random string of characters from specified pool.
+     * The method will then be called in {@link #generateId()} with specific
+     * instructions via parameters.
+     *
+     * @param characters Either LETTERS or NUMBERS constant string
+     * @param length The length of the random string to generate.
+     * @return A random string of the specified length.
+     */
+    private String generateRandomString(String characters, int length) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            int randomIndex = random.nextInt(characters.length());
+            stringBuilder.append(characters.charAt(randomIndex));
+        }
+        return stringBuilder.toString();
+    }
+
+    /**
+     * Generates a random itinerary reference by concatenating two random
+     * letters, three random digits, and one random letter.
+     *
+     * @return A random itinerary reference.
+     */
+    public final String generateId() {
+        // Generate two random letters
+        String randomLetters = generateRandomString(LETTERS, 2);
+
+        // Generate three random digits
+        String randomDigits = generateRandomString(NUMBERS, 3);
+
+        // Generate one random letter
+        String randomLastLetter = generateRandomString(LETTERS, 1);
+
+        // Concatenate the parts to form the itinerary reference
+        return randomLetters + randomDigits + randomLastLetter;
+    }
+
+    /**
+     * Simple getter method.
+     *
+     * Gets reference code of the itinerary.
+     *
+     * @return The itinerary ID.
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     * Simple getter method.
+     *
+     * Gets the list of activities associated with the itinerary.
+     *
+     * @return The list of activities associated with the itinerary.
+     */
     public List<Activity> getActivities() {
         return activities;
     }
 
+    /**
+     * Adds an activity instance to the activities array list.
+     *
+     * @param activity The activity to be added to the list.
+     */
     public void addActivity(Activity activity) {
         activities.add(activity);
         System.out.println(activity.getTitle() + " was added to the itinerary");
     }
-
-    public void clearItinerary() {
-        activities.clear();
-
-    }
-
-    public void addDisplayAddOns(AddOn addOn) {
-        displayAddOns.add(addOn);
-    }
     
+    /**
+     * Adds an itinerary add-on to the list of itinerary add-ons.
+     *
+     * @param addOn The itinerary add-on to be added.
+     */
+    public void addAddOn(AddOn addOn) {//adds itinerary addons
+        addOns.add(addOn);
+    }
+
+    /**
+     * Sets the attendee for this itinerary.
+     *
+     * @param attendee The attendee to be associated with this itinerary.
+     */
+    public void addAttendee(Attendee attendee) {
+        this.attendee = attendee;
+    }
+
+    /**
+     * This encapsulated method allows the program to check if the add-on that
+     * user inputted exists in the catalogue/display array or not and return
+     * Boolean to move on to the next process.
+     *
+     * @param addOnName The add-on to be checked.
+     * @return {@code true} if an add-on instance with the same name exists in
+     * displayAddOns list and {@code false} otherwise.
+     */
     public boolean hasAddOn(String addOnName) {
         for (AddOn addOn : displayAddOns) {
             if (addOn.getName().equalsIgnoreCase(addOnName)) {
                 return true;
             }
         }
-        System.out.println(displayAddOns.size());
+//        System.out.println(displayAddOns.size());//debug line to be deleted
         return false;
     }
-    
+
+    /**
+     * This method iterates over add-ons catalogue and returns an add-on that
+     * matches user input.
+     *
+     * It should never reach the return null line as this method gets called
+     * after {@link #hasAddOn()} returns true and confirms an add-on by that
+     * name exists.
+     *
+     * @param addOnName User-input to be checked if an add-on by that name
+     * exists or not.
+     * @return Add-on that matches user input.
+     */
     public AddOn getAddOnByName(String addOnName) {
         for (AddOn addOn : displayAddOns) {
             if (addOn.getName().equalsIgnoreCase(addOnName)) {
@@ -95,8 +210,23 @@ public class Itinerary {
         }
         return null; // Return null if the add-on with the specified name is not found
     }
-    
-    public void displayAddOns() {
+
+    /**
+     * Adds an add-on to the list of display add-ons associated with the
+     * itinerary.
+     *
+     * @param addOn Add-on instance to be added to the catalogue/display list.
+     */
+    public final void addDisplayAddOns(AddOn addOn) {
+        displayAddOns.add(addOn);
+    }
+
+    /**
+     * Displays the details of each itinerary add-on associated with the
+     * itinerary. The details include the title, activity cost, and a separator
+     * line for each add-on.
+     */
+    public void displayAddOn() {//display catalogue
         for (AddOn addOn : displayAddOns) {
             System.out.println("Title: " + addOn.getName());
             System.out.println("Activity Cost: £" + addOn.getCost() / 100);
@@ -104,6 +234,13 @@ public class Itinerary {
         }
     }
 
+    /**
+     * Checks whether the itinerary add-ons list created by user contains
+     * insurance.
+     *
+     * @return {@code true} if the list contains insurance add-on and
+     * {@code false} otherwise.
+     */
     public boolean containsInsurance() {//insurance is an activity addon
         for (AddOn addOn : addOns) {
             if (addOn.getName().equalsIgnoreCase("Insurance")) {
@@ -113,43 +250,51 @@ public class Itinerary {
         return false; // Insurance add-on not found
     }
 
-    public void addAddOn(AddOn addOn) {//adds itinerary addons
-//        if (addOn.getType().equalsIgnoreCase("itinerary")) {
-        addOns.add(addOn);
-//            System.out.println(addOn.getName() + " was added to the itinerary (itinerary addon)");
-//        } else if (addOn.getType().equalsIgnoreCase("activity")) {
-//            activityAddOns.add(addOn);
-//            System.out.println(addOn.getName()+ " was added to the itinerary (activity addon)");//
-//        }
-    }
-
-    public void addAttendee(Attendee attendee) {
-        this.attendee = attendee;
-    }
-//
-//    public List<Attendee> getAttendeeList() {
-//        return attendeeList;
-//    }
-
+    /**
+     * Checks if attendee has a personal insurance that covers for the activity
+     * that requires insurance based on the company rules.
+     *
+     * If an activity requires insurance and user doesn't have personal
+     * insurance, user will be prompted if they want to add insurance add-on
+     * provided or delete the activity from the itinerary if they disagree with
+     * the company rule and don't want to take any form of insurance. Ultimately
+     * users have the choice to discard the entire itinerary if they choose to
+     * do so.
+     *
+     * If user chose to remove the activity from itinerary, the activity object
+     * will be stored in activityToRemoved variable and removeActivity() method
+     * will be called outside of the loop to avoid
+     * ConcurrentModificationException for directly modifying the collection
+     * inside the loop.
+     *
+     * Boolean "shouldRemove" is introduced to remove an activity only if that
+     * option is selected to avoid unexpected behavior for removing null from
+     * the activities list.
+     */
     public void incuranceCheck() {
-        if (attendee.hasInsurance()) {//checks if attendee has personal insurance
-
-        } else {//if they dont...
-//            boolean insuranceRequired = false;//
+        Activity activityToRemove = null;
+        boolean shouldRemove = false;
+        if (!attendee.hasInsurance()) {
             for (Activity activity : activities) {
                 if (activity.requiresInsurance() && !activity.containsInsurance()) {
                     OUTER:
                     while (true) {
-                        System.out.println(activity.getTitle() + " requires insurance. "
+                        System.out.println(activity.getTitle() + " requires insurance. \n"
                                 + "Please Select an option\n"
-                                + "1: Add Insurance for £20\n"
-                                + "2: Discard itinerary");
+                                + "1: Add Insurance for £" + activity.insurance.getCost() / 100 + "\n"
+                                + "2: Remove " + activity.getTitle() + " from the itinerary\n"
+                                + "3: Discard itinerary");
                         switch (scanner.nextInt()) {
                             case 1:
                                 activity.addAddOn(activity.insurance);
                                 System.out.println("Insurance addOn was added");
                                 break OUTER;
                             case 2:
+                                shouldRemove = true;
+                                activityToRemove = activity;//Stores activity to be removed
+                                System.out.println("The activity was deleted from the itinerary");
+                                break OUTER;
+                            case 3:
                                 System.out.println("Discarding the process...");
                                 System.exit(0);
                                 break OUTER;
@@ -161,60 +306,55 @@ public class Itinerary {
                 }
             }
         }
+        //direct modification of the list outside of any iteration
+        if (shouldRemove == true) {
+            removeActivity(activityToRemove);
+        }
     }
 
+    /**
+     * Removes the specified activity from the list of activities associated
+     * with the itinerary.
+     *
+     * @param activity The activity to be removed from the itinerary.
+     */
+    public void removeActivity(Activity activity) {
+        activities.remove(activity);
+    }
+
+    /**
+     * Calculates the total cost for the itinerary.
+     *
+     * This method iterates over activities list and gets the cost of each
+     * activity with its add-ons by calling calculateCostWithAddOn() from
+     * activity class. Then cost of itinerary add-ons will be accumulated to totalCost
+     * local variable.
+     *
+     * Activity and add-on prices stored in pence are converted to pounds to
+     * display the final cost with a higher precision on the receipt after
+     * applying the discount.
+     *
+     * @return The cost for the entire itinerary without applying the discount
+     * yet.
+     */
     public double calculateCost() {//without discounts applied
         double totalCost = 0;
         for (Activity activity : activities) {
             totalCost += (double) activity.calculateCostWithAddOn();//go back to old code
         }
-//        for (AddOn addOn : addOns) {
-//            totalCost += addOn.getCost();
-//        }
-        //instead of the code above i use the existing method for calculating itinerary addOn costs per person
         totalCost += (double) calculateAddOnsSubTotal();
-
         return totalCost * attendee.getMembers(); //without applying discounts
     }
 
-//    private int calculateCost() {
-//        int totalCost = 0;
-//        for (Activity activity : activities) {
-//            totalCost += activity.calculateCostWithAddOn();//go back to old code
-//        }
-////        for (AddOn addOn : addOns) {
-////            totalCost += addOn.getCost();
-////        }
-//        //instead of the code above i use the existing method for calculating itinerary addOn costs per person
-//        totalCost += calculateAddOnsSubTotal();
-//        
-//        int totalDiscount = calculateDiscountPercentage();
-//        double discountPercentage = (100 - (double) totalDiscount) / 100.0;
-//        // Calculate the discount amount
-//        double totalDiscountAmount = discountPercentage * (double) totalCost;
-//        // Subtract the discount amount from the total cost
-//        totalCost = totalCost - (int)totalDiscountAmount;
-//        return totalCost * attendee.getMembers();
-//    }
-    public double calculateDiscountInPounds() {
-        double totalCost = calculateCost();
-        int discountRate = calculateDiscountPercentage();
-        double discountPercentage = (100 - (double) discountRate) / 100.0;
-        // Calculate the discount amount
-        double totalDiscountAmount = discountPercentage * (double) totalCost;
-        // Subtract the discount amount from the total cost
-//        totalDiscountAmount = totalCost - (int) totalCost;
-        return totalDiscountAmount / 100;
-    }
-
-    public double applyDiscount() {
-        double finalCost = calculateCost();
-        double discountAmount = calculateDiscountInPounds();
-        finalCost = finalCost / 100 - discountAmount;
-        return finalCost;
-    }
-
-    private int calculateDiscountPercentage() {//splitted the discount calculatin logic from total cost calculation
+    /**
+     * Calculates the discount value but in base format for further
+     * calculations. This is due to different methods requiring different
+     * formats and this method is a capsulation that can be used in different
+     * ways.
+     *
+     * @return Base discount value.
+     */
+    private int calculateDiscountPercentage() {
         int attendeeDiscount = 0;
 
         if (attendee.getMembers() >= 10 && attendee.getMembers() < 20) {
@@ -222,7 +362,7 @@ public class Itinerary {
         } else if (attendee.getMembers() >= 20) {
             attendeeDiscount = 8;
         }
-
+        //Split the discount calculatin logic from total cost calculation
         int activityDiscount = 0;
         if (activities.size() >= 3 && activities.size() <= 5) {
             activityDiscount = 5;
@@ -231,58 +371,82 @@ public class Itinerary {
         } else if (activities.size() > 6) {
             activityDiscount = 12;
         }
-
-        int totalDiscount = 100 - attendeeDiscount;  //changing it so it outputs the discount percentage (e.g. 5%)
+        //changing it so it outputs the discount percentage (e.g. 5%)
+        int totalDiscount = 100 - attendeeDiscount;
         totalDiscount = (totalDiscount * (100 - activityDiscount)) / 100;
         return totalDiscount;
-//        int discountPercentage = attendeeDiscount + activityDiscount;
-//        return discountPercentage;
     }
 
-//    public int displayFinalCost() {//For phase 2 this method is not relevant as the calculateCost() in line 83 knows the attendees count and displays 
-//        int itineraryCost = calculateCost() * attendee.getMembers();
-//        /*= calculatedCost * attendee.getMembers();*/ //price multiplied by members logic diabled for now //not disabled anymore
-////        System.out.println("Itinerary cost for " + attendee.getName() + ": £" + itineraryCost / 100);
-////        clearItinerary();//As this method will be the last operation in an itenerary, calling displayCost() method will trigger clearing all the lists so issues with price calculation will not happen
-//        return itineraryCost;
-//    }
-    private String generateId(int length) {//generate random string//this function is private and there is a getter for it
-        StringBuilder stringBuilder = new StringBuilder(length);
-        for (int i = 0; i < length; i++) {
-            int randomIndex = random.nextInt(CHARACTERS.length());
-            char randomChar = CHARACTERS.charAt(randomIndex);
-            stringBuilder.append(randomChar);
-        }
-        id = stringBuilder.toString();
-        return id;//TODO:check if it's unique!
+    /**
+     * Calculates the discount amount in pounds for the itinerary.
+     *
+     * If there was a 5% discount, calculateDiscountPercentage() returns value
+     * 95 and it will be stored in discountRate. discountRate will then be
+     * casted to double and stored in discountPercentage variable as 0.05 so 5%.
+     * Then this value will be multiplied by totalCost to achieve total discount
+     * amount, which will be printed on the receipt.
+     *
+     * @return The total discord amount in pounds.
+     */
+    public double calculateDiscountInPounds() {
+        double totalCost = calculateCost();
+        int discountRate = calculateDiscountPercentage();
+        // Calculate the discount amount
+        double discountPercentage = (100 - (double) discountRate) / 100.0;
+        // Subtract the discount amount from the total cost
+        double totalDiscountAmount = discountPercentage * (double) totalCost;
+        return totalDiscountAmount / 100;
     }
 
-    //TODO/note: generate receipt storing the first member in attendee arrayList as lead attendee
-    //save for later: insurance check
-//    if (activity.requiresInsurance() && !containsInsurance() && activity.containsInsurance() && !attendee.hasInsurance()) {
-//            // Handle the case where insurance is required but not present in the itinerary
-//            System.out.println("Insurance is required for adding " + activity.getTitle() + " to this itinerary");
-//            return;  // Do not add the activity to the itinerary 
-//        }
-    public String getAttendeeInitialSurname() {//I use it 
-//        List<String> result = new ArrayList<>();
-//        for(Attendee attendee : attendeeList){//
-        String fullName = attendee.getName();//gets attendee's fullname, for example Josh Hutchinson 
-        String[] fullNameArray = fullName.split(" ");//Splits fullname into 2 members of a String type array
-        String initial = String.valueOf(fullNameArray[0].charAt(0));//It is supposed to return the first letter from the String array ("J" in this example)
-        String surname = fullNameArray[1];//surname is the whole second member of the String array
-        String initialSurname = initial.concat(" " + surname);//concat both initial and surname variables to get initial<SPACE>surname outcome
-//        System.out.println(initialSurname);//test line
-//            result.add(initialSurname);           
-//        }
-//        return result;
+    /**
+     * This method applies the discount amount. Not by multiplying but by
+     * subtracting the discount amount from base itinerary cost to allow
+     * consistent display of correct prices on the receipt.
+     *
+     * @return Final cost of the itinerary discount applied.
+     */
+    public double applyDiscount() {
+        double finalCost = calculateCost();
+        double discountAmount = calculateDiscountInPounds();
+        finalCost = (finalCost / 100) - discountAmount;
+        return finalCost;
+    }
+
+    /**
+     * Gets the formatted string containing the initial letter of the first name
+     * and the full surname.
+     *
+     * @return The formatted string.
+     */
+    public String getAttendeeInitialSurname() {
+        String fullName = attendee.getName();
+        // Split the full name into first name and surname
+        String[] fullNameArray = fullName.split(" ");
+        //It returns the first letter from the String array 
+        String initial = String.valueOf(fullNameArray[0].charAt(0));
+        //surname is the whole second member of the String array
+        String surname = fullNameArray[1];
+        //concat both initial and surname variables to get initial<SPACE>surname outcome
+        String initialSurname = initial.concat(" " + surname);
         return initialSurname;
     }
 
-    //this method is reused in receipt generation for 2 similar processes (activity and attendee count)
-    public String getStringNumber(int number) {//pass an integer to get a String representing that number if it is 1-5
-        if (number > 0) {//0 attendee or 0 activities make no sense as an itinerary so it will be disregarded and handled as input error  
-            switch (number) {//returns One to Five if parameter is 1-5 and returns string digits if parameter value is bigger than 5
+    /**
+     * Gets the string representation of the number (1-5) in words or as string
+     * digits (6-).
+     *
+     * This method is reused in receipt generation for 2 similar processes
+     * (activity and attendee count)
+     *
+     * 0 attendee or 0 activities make no sense as an itinerary so it will be
+     * disregarded and handled as input error
+     *
+     * @param number The integer to be converted.
+     * @return The string representation of the number.
+     */
+    public String getStringNumber(int number) {
+        if (number > 0) {
+            switch (number) {
                 case 1:
                     return "One";
                 case 2:
@@ -298,160 +462,134 @@ public class Itinerary {
             }
         }
         // Handle the case when number is not greater than 0
-        return "ERROR: invalid parameter value";//attendee or activities can't be 0 or less
+        return "ERROR: Invalid parameter value. Number must not be negative.";
     }
 
-    private int calculateAddOnsSubTotal() {//for displaying the itinerary addons subtotal
+    /**
+     * Calculates the subtotal cost of the itinerary add-ons.
+     *
+     * @return The subtotal cost of the itinerary add-ons.
+     */
+    private int calculateAddOnsSubTotal() {
         int subTotal = 0;
+        // Iterate through each add-on and accumulate its cost
         for (AddOn addOn : addOns) {
             subTotal += addOn.getCost();
         }
-        return subTotal /* attendee.getMembers()*/;//commented out the getMembers() because it kinda ruins the entire calculation logic
+        return subTotal;
     }
 
-//    public void displayAddOns() {
-//        for (AddOn addOn : addOns) {
-//            System.out.println("Title: " + addOn.getName());
-//            System.out.println("Activity Number: " + addOn.getCost());
-//            System.out.println("--------------------------------------");
-//        }
-//    }
-    private int calculateSubTotal() {//for displaying the whole activities subtotal including addons
+    /**
+     * Calculates the total cost of activities in an itinerary, including base
+     * costs and costs of the activities and associated add-ons.
+     *
+     * @return The total cost of activities.
+     */
+    private int calculateSubTotal() {
         int activitySubTotal = 0;
         int addOnSubTotal = 0;
+        // Iterate through each activity
         for (Activity activity : activities) {
+            // Accumulate base cost of the activity
             activitySubTotal += activity.getBaseCost();
-            List<AddOn> activityAddOns = activity.getAddOns();//nice debug fix me :3
+            // Get the list of add-ons associated with the activity
+            List<AddOn> activityAddOns = activity.getAddOns();
+            // Iterate through each add-on of the activity and accumulate its cost
             for (AddOn addOn : activityAddOns) {
                 addOnSubTotal += addOn.getCost();
             }
         }
+        // Calculate the sub-total, then adjust for attendees
         return ((activitySubTotal + addOnSubTotal) * attendee.getMembers()) / 100;
     }
 
-//    public void printReceipt() {
-//    String initialSurname = getAttendeeInitialSurname();
-//    String reference = getID();
-//    int itineraryCost = calculateCost();
-//    String activitiesCountString = getStringNumber(activities.size());
-//    String attendeesCountString = getStringNumber(attendee.getMembers());
-//    int itineraryAddOnSubTotal = calculateAddOnsSubTotal();
-//
-//    final String DOUBLE_LINE = "+===============================================================+";
-//    final String LINE_FORMAT = "| %-61s |%n";  // Adjust the width (70)
-//    final String SUBTOTAL_FORMAT = "| %-40s Sub-Total: £%-9.2f |%n";  // Adjust the width (60) based on your needs
-//
-//    System.out.println(DOUBLE_LINE);
-//    System.out.printf(LINE_FORMAT, "Client: " + initialSurname + "\t\t\tRef: " + reference);
-//    System.out.printf(LINE_FORMAT, "Date: " + day + "/" + month + "/" + year);
-//    System.out.printf(LINE_FORMAT, "Activities: " + activitiesCountString + "\t\t\tAttendees: " + attendeesCountString);
-//    System.out.printf(LINE_FORMAT, "");
-//    System.out.printf(LINE_FORMAT, "Cost:\t£%-56.2f |", itineraryCost / 100.0);  // Adjusted width and alignment
-//
-//    // Print Cost breakdown
-//    System.out.printf(LINE_FORMAT, "\t\t\tCost breakdown");
-//    System.out.printf(LINE_FORMAT, "");
-//    System.out.printf(SUBTOTAL_FORMAT, "Itinerary Add-ons", itineraryAddOnSubTotal / 100.0);
-//    for (AddOn addOn : addOns) {
-//        int addOnSubTotal = addOn.getCost() * attendee.getMembers();
-//        System.out.printf(LINE_FORMAT, "- " + addOn.getName()
-//                + " @ £" + addOn.getCost() / 100 + " x " + attendee.getMembers()
-//                + " = £" + addOnSubTotal / 100.0);
-//    }
-//    // Print Activities
-//    int i = 0;
-//    int totalActivitySubTotal = 0;
-//    for (Activity activity : activities) {
-//        i++;
-//        int activityAddOnSubTotal = 0;
-//        int activitySubTotal = activity.getBaseCost() * attendee.getMembers();
-//        totalActivitySubTotal += activitySubTotal;
-//
-//        System.out.printf(SUBTOTAL_FORMAT, i + ". " + activity.getTitle(), activitySubTotal / 100.0);
-//
-//        List<AddOn> activityAddOns = activity.getAddOns();
-//        for (AddOn addOn : activityAddOns) {
-//            int addOnSubTotal = addOn.getCost() * attendee.getMembers();
-//            activityAddOnSubTotal += addOnSubTotal;
-//
-//            System.out.printf(LINE_FORMAT, "\tAddOn: " + addOn.getName()
-//                    + " @ £" + addOn.getCost() / 100.0 + " x " + attendee.getMembers()
-//                    + " = £" + addOnSubTotal / 100.0);
-//        }
-//
-//        System.out.printf(SUBTOTAL_FORMAT, "", activityAddOnSubTotal / 100.0);
-//    }
-//
-//    // Print Total and Discount
-//    int totalDiscount = calculateDiscount();
-//    double totalDiscountValue = ((double) totalDiscount / 100) * itineraryCost;
-//    System.out.printf(LINE_FORMAT, "");
-//    System.out.printf(LINE_FORMAT, " " + totalDiscount + "% Discount\t\t\tTotal discount: £%-9.2f", totalDiscountValue / 100.0);
-//    System.out.println(DOUBLE_LINE);
-//    System.out.println((double) totalDiscount / 100);
-//}
+    /**
+     * Calls 3 encapsulated/split methods to perform one task of printing the receipt.
+     */
     public void printReceipt() {
+        printReceiptHeader();
+        printReceiptBody();
+        printReceiptFooter();
+    }
+
+    /**
+     * Prints the header section of the receipt for the current itinerary,
+     * including client information, reference, date, activities count,
+     * attendees count, and the cost for the entire itienrary.
+     */
+    public void printReceiptHeader() {
         incuranceCheck();
         String initialSurname = getAttendeeInitialSurname();
         String reference = getId();
         double itineraryCost = applyDiscount();
         String activitiesCountString = getStringNumber(activities.size());
         String attendeesCountString = getStringNumber(attendee.getMembers());
-        int itineraryAddOnSubTotal = calculateAddOnsSubTotal() / 100 * attendee.getMembers();
-        int subTotal = calculateSubTotal();
 
         System.out.println("+===============================================================+");
         System.out.println("| Client: " + initialSurname + "\t\t\tRef: " + reference + "\t\t|");
         System.out.println("| Date: " + day + "/" + month + "/" + year + "\t\t\t\t\t\t|");
-        System.out.println("| Activities: " + activitiesCountString + "\t\t\tAttendees: " + 
-                attendeesCountString + "\t|");//do i store it somewhere first?
+        System.out.println("| Activities: " + activitiesCountString + "\t\t\tAttendees: "
+                + attendeesCountString + "\t|");//do i store it somewhere first?
         System.out.println("|\t\t\t\t\t\t\t\t|");
         System.out.println("| Cost:\t£" + itineraryCost + "\t\t\t\t\t\t\t|");
         System.out.println("|\t\t\t\t\t\t\t\t|");
+    }
+
+    /**
+     * Prints the detailed breakdown of the itinerary, including costs,
+     * discounts, and add-on details. It calculates various costs, considers
+     * discounts, and provides a detailed breakdown of the itinerary and
+     * associated add-ons.
+     */
+    public void printReceiptBody() {
+        int itineraryAddOnSubTotal = calculateAddOnsSubTotal() / 100 * attendee.getMembers();
+        int subTotal = calculateSubTotal();
         System.out.println("|\t\t\tCost breakdown\t\t\t\t|");
         System.out.println("|\t\t\t\t\t\t\t\t|");
         System.out.println("| Itinerary Add-ons\t\t\tSub-Total:\t£" + itineraryAddOnSubTotal + "\t|");
         for (AddOn addOn : addOns) {
             System.out.println("| - " + addOn.getName()
-                    + " @ £" + addOn.getCost() / 100 + " x " + attendee.getMembers() +
-                    " = £" + itineraryAddOnSubTotal + "\t\t\t\t|");
+                    + " @ £" + addOn.getCost() / 100 + " x " + attendee.getMembers()
+                    + " = £" + itineraryAddOnSubTotal + "\t\t\t\t|");
         }
         System.out.println("|\t\t\t\t\t\t\t\t|");
+        
         int i = 0;
-        int activitySubTotal = 0;
-        int addOnSubTotal = 0;//SUBTOTAL CALCULATIONS NEED TO BE OUTSIDE OF THIS METHOD, SOMETHING LIKE THE FOR LOOP NEST BELOW BUT FOR PRICES. GOODLUCK TOMORROW ME
-
         System.out.println("| Activities\t\t\t\t" + "Sub-Total:\t£" + subTotal + "\t|");
         for (Activity activity : activities) {
             i++;
-            int activityAddOnSubTotal = 0;//i cant reuse the calculateSubTotal() bcause in here it is separete activities and will be resetted after each loop
-//            activitySubTotal += activity.getBaseCost();
-            System.out.println("| " + i + ". " + activity.getTitle() + 
-                    " @ £" + activity.getBaseCost() / 100 + " x" + attendee.getMembers() + 
-                    " = £" + (activity.getBaseCost() * attendee.getMembers()) / 100 + "\t\t\t|");
+            //i cant reuse the calculateSubTotal() bcause in here it is separete activities and will be resetted after each loop
+            int activityAddOnSubTotal = 0;
+            System.out.println("| " + i + ". " + activity.getTitle()
+                    + " @ £" + activity.getBaseCost() / 100 + " x" + attendee.getMembers()
+                    + " = £" + (activity.getBaseCost() * attendee.getMembers()) / 100 + "\t\t\t|");
             activityAddOnSubTotal += activity.getBaseCost();
 
             List<AddOn> activityAddOns = activity.getAddOns();
-//            System.out.println("Number of add-ons: " + addOns1.size());//debug line
             for (AddOn addOn : activityAddOns) {
-                System.out.println("|\tAddOn: " + addOn.getName() + 
-                        " @ £" + addOn.getCost() / 100 + " x" + attendee.getMembers() + 
-                        " = £" + (addOn.getCost() * attendee.getMembers()) / 100 + "\t\t\t\t|");
+                System.out.println("|\tAddOn: " + addOn.getName()
+                        + " @ £" + addOn.getCost() / 100 + " x" + attendee.getMembers()
+                        + " = £" + (addOn.getCost() * attendee.getMembers()) / 100 + "\t\t\t\t|");
                 activityAddOnSubTotal += addOn.getCost();
             }
-            System.out.println("|\t\t\t\t\tSub-Total:\t£" + 
-                    activityAddOnSubTotal * attendee.getMembers() / 100 + "\t|");
+            System.out.println("|\t\t\t\t\tSub-Total:\t£"
+                    + activityAddOnSubTotal * attendee.getMembers() / 100 + "\t|");
         }
         System.out.println("|\t\t\t\t\t\t\t\t|");
+    }
 
-        //System.out.println("| " + (100 - calculateDiscount()) + "% Discount\t\t\t\tTotal discount:\t£" + (((1 - (double) calculateDiscount() / 100) * itineraryCost)) / 100 + "\t|");
+    /**
+     * Prints the footer section of the receipt for the current itinerary,
+     * including the total discount and a closing statement. It calculates the
+     * total discount in pounds and formats it to display up to 1 digit after
+     * the decimal point.
+     */
+    public void printReceiptFooter() {
         double totalDiscount = calculateDiscountInPounds();
-        String formattedTotalDiscount = String.format("%.1f", totalDiscount);// Format the total discount to display up to 1 digit after the decimal point
+        // Format the total discount to display up to 1 digit after the decimal point
+        String formattedTotalDiscount = String.format("%.1f", totalDiscount);
         System.out.println("| " + (100 - calculateDiscountPercentage()) + "% Discount"
                 + "\t\t\t\tTotal discount:\t£" + formattedTotalDiscount + "\t|");
         System.out.println("+===============================================================+");
-
-//        System.out.println(calculateDiscount());
-//        System.out.println(1 - (double) calculateDiscount() / 100);//debug 
     }
 }
