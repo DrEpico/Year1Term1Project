@@ -20,22 +20,22 @@ import java.util.List;
 public class Activity{
     private int baseCost;
     private String title;    
-    private int number;
+    private final int number; 
     private String description;
     private String location;
     private String dateTime;
     private int duration;
-    private boolean requiresInsurance;
-    private List<AddOn> addOns;
+    private final boolean requiresInsurance;
+    private final List<AddOn> addOns;
     
     /**
      * Preset add-ons associated with activities.
      * 
      * Activity add-ons are instantiated in the Activity class.
      */
-    public AddOn insurance = new AddOn("Insurance", 2300, "activity");
-    public AddOn travel = new AddOn("Travel", 2000, "activity");
-    public AddOn photography = new AddOn("Photography", 2500, "activity");
+    public AddOn insurance = new AddOn("Insurance", 1300, "activity");
+    public AddOn travel = new AddOn("Travel", 1000, "activity");
+    public AddOn photography = new AddOn("Photography", 1400, "activity");
     
     /**
      * Parameterized constructor for creating an activity.
@@ -85,21 +85,29 @@ public class Activity{
     }
     
     /**
-     * Adds an add-on to the list of associated add-ons for the activity.
-     * 
-     * @param addOn The add-on instance to be added.
+     * Adds an add-on to the list of activity add-ons with duplication prevention logic.
+     *
+     * @param addOn The activity add-on to be added.
      */
-    public void addAddOn(AddOn addOn) {
-        addOns.add(addOn);
+    public void addAddOn(AddOn addOn) {//adds itinerary addons
+        if (!addOns.contains(addOn)) {
+            addOns.add(addOn);
+            System.out.println(addOn.getName() + " was added to the itinerary");
+        } else {
+            System.out.println(addOn.getName() + " already exists in list of itinerary add-ons!");
+        }
     }
     
     /**
-     * Removes an add-on from the list of associated add-ons for the activity.
+     * Removes an activity add-on from the list of associated add-ons for the activity
+     * if the activity instance exists in the list.
      * 
      * @param addOn The add-on instance to be removed.
      */
     public void removeAddOn(AddOn addOn) {
-        addOns.remove(addOn);
+        if(addOns.contains(addOn)){
+            addOns.remove(addOn);
+        }
     }
     
     /**
@@ -144,7 +152,6 @@ public class Activity{
         for (AddOn addOn : addOns) {
             activityCost+= addOn.getCost();
         }
-//        clearActivity();
         return activityCost;
     }
     

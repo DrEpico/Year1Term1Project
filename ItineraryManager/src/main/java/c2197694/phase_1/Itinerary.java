@@ -31,9 +31,9 @@ public class Itinerary {
      * Lists of objects associated with Itinerary class such as activities and
      * itinerary addOns.
      */
-    private List<Activity> activities;
-    private List<AddOn> addOns;
-    private String id;
+    private final List<Activity> activities;
+    private final List<AddOn> addOns;
+    private final String id;
     private Attendee attendee;
 
     /**
@@ -41,9 +41,9 @@ public class Itinerary {
      *
      * Itinerary add-ons are instantiated in the Itinerary class.
      */
-    public AddOn accommodation = new AddOn("Accommodation", 2000, "itinerary");
-    public AddOn teaBreaks = new AddOn("Coffee/Tea breaks", 700, "itinerary");
-    public AddOn lunch = new AddOn("Lunch", 2200, "itinerary");
+    private final AddOn accommodation = new AddOn("Accommodation", 1700, "itinerary");
+    private final AddOn teaBreak = new AddOn("Coffee/Tea breaks", 500, "itinerary");
+    private final AddOn lunch = new AddOn("Lunch", 1700, "itinerary");
 
     Scanner scanner = new Scanner(System.in);
 
@@ -109,13 +109,18 @@ public class Itinerary {
     }
 
     /**
-     * Adds an activity instance to the activities array list.
+     * Adds an activity instance to the activities array list and prevents duplication
+     * of one activity in the itinerary.
      *
      * @param activity The activity to be added to the list.
      */
     public void addActivity(Activity activity) {
-        activities.add(activity);
-        System.out.println(activity.getTitle() + " was added to the itinerary");
+        if (!activities.contains(activity)){
+            activities.add(activity);
+            System.out.println(activity.getTitle() + " was added to the itinerary");
+        } else {
+            System.out.println(activity.getTitle() + " already exists in your list of activities!");
+        }
     }
 
     /**
@@ -125,6 +130,7 @@ public class Itinerary {
      */
     public void addAddOn(AddOn addOn) {//adds itinerary addons
         addOns.add(addOn);
+        System.out.println(addOn.getName() + " was added to the itinerary");
     }
 
     /**
@@ -132,8 +138,9 @@ public class Itinerary {
      *
      * @param attendee The attendee to be associated with this itinerary.
      */
-    public void addAttendee(Attendee attendee) {
+    public void setAttendee(Attendee attendee) {
         this.attendee = attendee;
+        
     }
 
     /**
@@ -206,6 +213,7 @@ public class Itinerary {
      */
     public void removeActivity(Activity activity) {
         activities.remove(activity);
+        System.out.println(activity.getTitle() + " was removed");
     }
 
     /**
@@ -271,12 +279,33 @@ public class Itinerary {
      *
      * @return The total cost of the itinerary in pence.
      */
-    public int displayFinalCost() {
+    public double displayFinalCost() {
         incuranceCheck();
-        int itineraryCost = calculateCost() * attendee.getMembers();
-        System.out.println("Itinerary cost for " + attendee.getName() 
-                + ": £" + itineraryCost / 100);
+        double individualItineraryCost = (double) calculateCost()/100;
+        double finalItineraryCost = (double) calculateCost()/100 * attendee.getMembers();
+        System.out.print("Itinerary cost for " + attendee.getName() 
+                + ": £" + finalItineraryCost);
+        if(attendee.getMembers() > 1){
+            System.out.println(" (£" + individualItineraryCost + " per person)"); 
+        }
         System.out.println();
-        return itineraryCost;
+        return finalItineraryCost;
+    }
+    
+    /**
+     * Getter methods for itinerary add-ons.
+     * 
+     * @return add-on object
+     */
+    public AddOn getAccommodationAddOn(){
+        return accommodation;
+    }
+    
+    public AddOn getTeaBreakAddOn(){
+        return teaBreak;
+    }
+    
+    public AddOn getLunchAddOn(){
+        return lunch;
     }
 }
