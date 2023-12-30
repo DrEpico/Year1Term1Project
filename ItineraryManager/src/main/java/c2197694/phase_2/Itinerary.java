@@ -21,12 +21,12 @@ public class Itinerary {
 
     /**
      * Constant strings representing all letters and numbers that can be used in
-     * {@link #generateRandomString()} method, which will then be called in 
+     * {@link #generateRandomString()} method, which will then be called in
      * {@link #generateId()} method to create itinerary ID.
      *
-     * Random object instead of SecureRandom that is cryptographically stronger than Random
-     * but slower as well. So for the purpose of itinerary ID generation in this project,
-     * Random is more suitable
+     * Random object instead of SecureRandom that is cryptographically stronger
+     * than Random but slower as well. So for the purpose of itinerary ID
+     * generation in this project, Random is more suitable
      */
     private static final String LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final String NUMBERS = "0123456789";
@@ -36,31 +36,31 @@ public class Itinerary {
      * Lists of objects associated with Itinerary class such as activities and
      * itinerary addOns.
      */
-    private List<Activity> activities;
-    private List<AddOn> addOns;
-    private List<AddOn> displayAddOns;
-    private String id;
+    private final List<Activity> activities;
+    private final List<AddOn> addOns;
+    private final List<AddOn> displayAddOns;
+    private final String id;
     private Attendee attendee;
 
     /**
      * These lines get the current day, month and year then store them in
      * variables to be used later in {@link #printReceipt()} function.
      */
-    private LocalDateTime now = LocalDateTime.now();
-    int day = now.getDayOfMonth();
-    int month = now.getMonthValue();
-    int year = now.getYear();
+    private final LocalDateTime now = LocalDateTime.now();
+    private final int day = now.getDayOfMonth();
+    private final int month = now.getMonthValue();
+    private final int year = now.getYear();
 
     /**
      * Preset add-ons associated with itinerary.
      *
      * Itinerary add-ons are instantiated in the Itinerary class.
      */
-    public AddOn accommodation = new AddOn("Accommodation", 2000, "itinerary");
-    public AddOn teaBreaks = new AddOn("Tea break", 700, "itinerary");
-    public AddOn lunch = new AddOn("Lunch", 2200, "itinerary");
+    private final AddOn accommodation = new AddOn("Accommodation", 1700, "itinerary");
+    private final AddOn teaBreaks = new AddOn("Tea break", 500, "itinerary");
+    private final AddOn lunch = new AddOn("Lunch", 1500, "itinerary");
 
-    Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner = new Scanner(System.in);
 
     /**
      * Constructs a new Itinerary object with a randomly generated ID and
@@ -96,6 +96,7 @@ public class Itinerary {
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < length; i++) {
             int randomIndex = random.nextInt(characters.length());
+            
             stringBuilder.append(characters.charAt(randomIndex));
         }
         return stringBuilder.toString();
@@ -144,31 +145,67 @@ public class Itinerary {
     }
 
     /**
-     * Adds an activity instance to the activities array list.
+     * Adds an activity instance to the activities array list and prevents
+     * duplication of one activity in the itinerary.
      *
      * @param activity The activity to be added to the list.
      */
     public void addActivity(Activity activity) {
-        activities.add(activity);
-        System.out.println(activity.getTitle() + " was added to the itinerary");
+        if (!activities.contains(activity)) {
+            activities.add(activity);
+//            System.out.println(activity.getTitle() + " was added to the itinerary");
+        } else {
+            System.out.println(activity.getTitle() + " already exists in your list of activities!");
+        }
     }
-    
+
     /**
      * Adds an itinerary add-on to the list of itinerary add-ons.
      *
      * @param addOn The itinerary add-on to be added.
      */
     public void addAddOn(AddOn addOn) {//adds itinerary addons
-        addOns.add(addOn);
+        if (!addOns.contains(addOn)) {
+            addOns.add(addOn);
+//            System.out.println(addOn.getName() + " was added to the itinerary");
+        } else {
+            System.out.println(addOn.getName() + " already exists in list of itinerary add-ons!");
+        }
     }
 
     /**
-     * Sets the attendee for this itinerary.
+     * Adds an add-on to the list of display add-ons associated with the
+     * itinerary.
+     *
+     * @param addOn Add-on instance to be added to the catalogue/display list.
+     */
+    public final void addDisplayAddOns(AddOn addOn) {
+        if (!displayAddOns.contains(addOn)) {
+            displayAddOns.add(addOn);
+        }
+    }
+
+    /**
+     * Sets the lead attendee for this itinerary.
      *
      * @param attendee The attendee to be associated with this itinerary.
      */
-    public void addAttendee(Attendee attendee) {
+    public void setAttendee(Attendee attendee) {
         this.attendee = attendee;
+    }
+
+    /**
+     * Displays the details of each itinerary add-on associated with the
+     * itinerary. The details include the title, activity cost, and a separator
+     * line for each add-on.
+     */
+    public void displayAddOn() {//display catalogue
+        System.out.println("\n--------------------------------------");
+        for (AddOn addOn : displayAddOns) {
+            System.out.println("Title: " + addOn.getName());
+            System.out.println("Activity Cost: £" + addOn.getCost() / 100);
+            System.out.println("--------------------------------------");
+        }
     }
 
     /**
@@ -186,7 +223,6 @@ public class Itinerary {
                 return true;
             }
         }
-//        System.out.println(displayAddOns.size());//debug line to be deleted
         return false;
     }
 
@@ -209,29 +245,6 @@ public class Itinerary {
             }
         }
         return null; // Return null if the add-on with the specified name is not found
-    }
-
-    /**
-     * Adds an add-on to the list of display add-ons associated with the
-     * itinerary.
-     *
-     * @param addOn Add-on instance to be added to the catalogue/display list.
-     */
-    public final void addDisplayAddOns(AddOn addOn) {
-        displayAddOns.add(addOn);
-    }
-
-    /**
-     * Displays the details of each itinerary add-on associated with the
-     * itinerary. The details include the title, activity cost, and a separator
-     * line for each add-on.
-     */
-    public void displayAddOn() {//display catalogue
-        for (AddOn addOn : displayAddOns) {
-            System.out.println("Title: " + addOn.getName());
-            System.out.println("Activity Cost: £" + addOn.getCost() / 100);
-            System.out.println("--------------------------------------");
-        }
     }
 
     /**
@@ -281,18 +294,21 @@ public class Itinerary {
                     while (true) {
                         System.out.println(activity.getTitle() + " requires insurance. \n"
                                 + "Please Select an option\n"
-                                + "1: Add Insurance for £" + activity.insurance.getCost() / 100 + "\n"
+                                + "1: Add Insurance for £" +
+                                    activity.getInsuranceAddOn().getCost() / 100 + "\n"
                                 + "2: Remove " + activity.getTitle() + " from the itinerary\n"
                                 + "3: Discard itinerary");
                         switch (scanner.nextInt()) {
                             case 1:
-                                activity.addAddOn(activity.insurance);
+                                activity.addAddOn(activity.getInsuranceAddOn());
                                 System.out.println("Insurance addOn was added");
+                                scanner.nextLine();
                                 break OUTER;
                             case 2:
                                 shouldRemove = true;
                                 activityToRemove = activity;//Stores activity to be removed
                                 System.out.println("The activity was deleted from the itinerary");
+                                scanner.nextLine();
                                 break OUTER;
                             case 3:
                                 System.out.println("Discarding the process...");
@@ -319,7 +335,9 @@ public class Itinerary {
      * @param activity The activity to be removed from the itinerary.
      */
     public void removeActivity(Activity activity) {
-        activities.remove(activity);
+        if (activities.contains(activity)) {
+            activities.remove(activity);
+        }
     }
 
     /**
@@ -327,8 +345,8 @@ public class Itinerary {
      *
      * This method iterates over activities list and gets the cost of each
      * activity with its add-ons by calling calculateCostWithAddOn() from
-     * activity class. Then cost of itinerary add-ons will be accumulated to totalCost
-     * local variable.
+     * activity class. Then cost of itinerary add-ons will be accumulated to
+     * totalCost local variable.
      *
      * Activity and add-on prices stored in pence are converted to pounds to
      * display the final cost with a higher precision on the receipt after
@@ -464,6 +482,10 @@ public class Itinerary {
         // Handle the case when number is not greater than 0
         return "ERROR: Invalid parameter value. Number must not be negative.";
     }
+    
+    public List<AddOn> getAddOns(){
+        return addOns;
+    }
 
     /**
      * Calculates the subtotal cost of the itinerary add-ons.
@@ -504,7 +526,8 @@ public class Itinerary {
     }
 
     /**
-     * Calls 3 encapsulated/split methods to perform one task of printing the receipt.
+     * Calls 3 encapsulated/split methods to perform one task of printing the
+     * receipt.
      */
     public void printReceipt() {
         printReceiptHeader();
@@ -553,12 +576,13 @@ public class Itinerary {
                     + " = £" + itineraryAddOnSubTotal + "\t\t\t\t|");
         }
         System.out.println("|\t\t\t\t\t\t\t\t|");
-        
+
         int i = 0;
         System.out.println("| Activities\t\t\t\t" + "Sub-Total:\t£" + subTotal + "\t|");
         for (Activity activity : activities) {
             i++;
-            //i cant reuse the calculateSubTotal() bcause in here it is separete activities and will be resetted after each loop
+            /*connot reuse the calculateSubTotal() bcause in here it is separete activities 
+            and will be resetted after each loop*/
             int activityAddOnSubTotal = 0;
             System.out.println("| " + i + ". " + activity.getTitle()
                     + " @ £" + activity.getBaseCost() / 100 + " x" + attendee.getMembers()

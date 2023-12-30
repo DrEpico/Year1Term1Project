@@ -32,17 +32,17 @@ public class Activity{
      * while "displayAddOn" is responsible for displaying what addOns are available for users 
      * on command line and no addition or deletion happens to "displayAddOns" due to user actions.
      */
-    private List<AddOn> addOns;
-    private List<AddOn> displayAddOns;
+    private final List<AddOn> addOns;
+    private final List<AddOn> displayAddOns;
     
     /**
      * Preset add-ons associated with activities.
      * 
      * Activity add-ons are instantiated in the Activity class.
      */
-    public AddOn insurance = new AddOn("Insurance", 2300, "activity");
-    public AddOn travel = new AddOn("Travel", 2000, "activity");
-    public AddOn photography = new AddOn("Photography", 2500, "activity");
+    private final AddOn insurance = new AddOn("Insurance", 1300, "activity");
+    private final AddOn travel = new AddOn("Travel", 1000, "activity");
+    private final AddOn photography = new AddOn("Photography", 1400, "activity");
     
     /**
      * Parameterized constructor for creating an activity.
@@ -97,30 +97,40 @@ public class Activity{
     }
     
     /**
-     * Adds an add-on to the list of associated add-ons for the activity.
-     * 
-     * @param addOn The add-on instance to be added.
+     * Adds an add-on to the list of activity add-ons with duplication prevention logic.
+     *
+     * @param addOn The activity add-on to be added.
      */
-    public void addAddOn(AddOn addOn) {
-        addOns.add(addOn);
+    public void addAddOn(AddOn addOn) {//adds itinerary addons
+        if (!addOns.contains(addOn)) {
+            addOns.add(addOn);
+        } else {
+            System.out.println(addOn.getName() + " already exists in list of itinerary add-ons!");
+        }
     }
     
     /**
-     * Removes an add-on from the list of associated add-ons for the activity.
+     * Removes an activity add-on from the list of associated add-ons for the activity
+     * if the activity instance exists in the list.
      * 
      * @param addOn The add-on instance to be removed.
      */
     public void removeAddOn(AddOn addOn) {
-        addOns.remove(addOn);
+        if(addOns.contains(addOn)){
+            addOns.remove(addOn);
+        }
     }
     
     /**
-     * Adds an add-on to the list of display add-ons for the activity.
+     * Adds an add-on to the list of display add-ons for the activity if that
+     * add-on doesn't already exists in the catalogue list.
      *
      * @param addOn The add-on to be added for display purposes.
      */
-    public void addDisplayAddOn(AddOn addOn){
-        displayAddOns.add(addOn);
+    public final void addDisplayAddOn(AddOn addOn){
+        if (!addOns.contains(addOn)){
+            displayAddOns.add(addOn);
+        }
     }
     
     /**
@@ -184,9 +194,10 @@ public class Activity{
      * The information displayed includes the name (title) and cost of each add-on, separated by a line.
      */
     public void displayAddOns() {
+        System.out.println("\n--------------------------------------");
         for (AddOn addOn : displayAddOns) {
             System.out.println("Title: " + addOn.getName());
-            System.out.println("Activity Number: " + addOn.getCost());
+            System.out.println("Activity Number: £" + addOn.getCost()/100);
             System.out.println("--------------------------------------");
         }
     }
@@ -206,7 +217,7 @@ public class Activity{
                 return true;
             }
         }
-        System.out.println(displayAddOns.size());
+//        System.out.println(displayAddOns.size());
         return false;
     }
     
@@ -273,6 +284,18 @@ public class Activity{
     
     public boolean requiresInsurance(){
         return requiresInsurance;
+    }
+    
+    public AddOn getInsuranceAddOn(){
+        return insurance;
+    }
+    
+    public AddOn getTravelAddOn(){
+        return insurance;
+    }
+    
+    public AddOn getPhotographyAddOn(){
+        return insurance;
     }
     
     /**

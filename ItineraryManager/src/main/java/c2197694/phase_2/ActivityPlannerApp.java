@@ -5,57 +5,101 @@
 package c2197694.phase_2;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
 /**
- * The "ActivityPlannerApp" class represents an application for planning and managing activities and itineraries.
+ * The "ActivityPlannerApp" class represents an application for planning and
+ * managing activities and itineraries.
  *
  * @author c2197694
  */
 public class ActivityPlannerApp {
-    /**
-     * List of 
-     */
-    private List<Activity> activities;//list of available activities. selected activities will be added to the arraylist in itinerary class to be handled by that
-    private List<AddOn> addOns;
-    private List<Itinerary> iteneraries;//list of user itinearies already created
-//    private static Activity activity;
-//    private static Attendee attendee; //not used
 
-//    private Itinerary itinerary;
-//    private Activity activity; //not used
-    
     /**
-     * Available activities are declared and initialised in this 
-     * activity planner app for higher relevancy
+     * List of available activities and itineraries created by customers.
+     *
+     * Selected activities by users will be added to the array-list in itinerary
+     * class to be process in the same class.
+     *
+     * List of itineraries are currently not in use but it can be used to
+     * control itinerary ID duplication which is very unlikely in the first
+     * place (1 in 17 million).
      */
-    Activity paperBridge = new Activity(1000, "Building a bridge from paper", 1,
-            "Let's build a bridge from paper!", "Teesside University",
-            "16th Dec 15:00", 2, false);
-    Activity assaultCourse = new Activity(10000, "SAS-style assault courses", 2,
-            "Become stronks", "Saltburn",
-            "15th Dec 7:00", 15, true);
-    Activity cookery = new Activity(1700, "Cookery class", 3,
-            "Let bro cook", "Teesside University",
-            "9th Dec 14:00", 3, false);
-    Activity hiking = new Activity(5900, "Hiking and nature walks", 4,
-            "Hiking time!", "North York Moors Park", 
-            "8th Dec 14:00", 6, true);
-    
+    private final List<Activity> activities;
+    private List<Itinerary> iteneraries;
+
+    /**
+     * Available activities are declared and initialised in the activity planner
+     * app for higher relevancy.
+     *
+     * These activity objects will then be added to the relevant array-list in
+     * itinerary class.
+     */
+    private final Activity paperBridge = new Activity(
+            500,
+            "Building a bridge from paper",
+            1,
+            "Let's build a bridge from paper!",
+            "Teesside University",
+            "16th Dec 15:00",
+            2,
+            false);
+    private final Activity assaultCourse = new Activity(
+            9000,
+            "SAS-style assault courses",
+            2,
+            "Become stronks",
+            "Saltburn",
+            "15th Dec 7:00",
+            15,
+            true);
+    private final Activity cookery = new Activity(
+            1000,
+            "Cookery class",
+            3,
+            "Let bro cook",
+            "Teesside University",
+            "9th Dec 14:00",
+            3,
+            false);
+    private final Activity hiking = new Activity(
+            3000,
+            "Hiking and nature walks",
+            4,
+            "Hiking time!",
+            "North York Moors Park",
+            "8th Dec 14:00",
+            6,
+            true);
+
+    /**
+     * Activity planner app constructor initialises activities list and adds
+     * available activities to the list.
+     */
     public ActivityPlannerApp() {
         this.activities = new ArrayList<>();
-        this.addOns = new ArrayList<>();
         this.addActivity(paperBridge);
         this.addActivity(assaultCourse);
         this.addActivity(cookery);
         this.addActivity(hiking);
     }
 
+    /**
+     * Adds activity to the list of available activities to be picked by users.
+     *
+     * @param activity The activity to be added to the list.
+     */
     public final void addActivity(Activity activity) {
         activities.add(activity);
     }
 
+    /**
+     * Displays information about each activity in the itinerary. Prints details
+     * such as title, number, description, location, date and time, duration,
+     * and base cost for each activity.
+     */
     public void displayActivities() {
         for (Activity activity : activities) {
             System.out.println("Title: " + activity.getTitle());
@@ -64,91 +108,214 @@ public class ActivityPlannerApp {
             System.out.println("Location: " + activity.getLocation());
             System.out.println("DateTime: " + activity.getDateTime());
             System.out.println("Duration: " + activity.getDuration() + " hours");
-            System.out.println("Base Cost: £" + activity.getBaseCost()/100);
+            System.out.println("Base Cost: £" + activity.getBaseCost() / 100);
             System.out.println("--------------------------------------");
         }
     }
 
-    public void displayAddOns() {
-        for (AddOn addOn : addOns) {
-            System.out.println("Title: " + addOn.getName());
-            System.out.println("Activity Cost: £" + addOn.getCost() / 100);
-            System.out.println("--------------------------------------");
-        }
-    }
-
-    public void addAddOn(AddOn addOn) {
-        addOns.add(addOn);
-    }
-
+    /**
+     * Could be used for ID duplication logic. Currently not in used.
+     *
+     * @param itinerary The itinerary to be added.
+     */
     public void addItinenary(Itinerary itinerary) {
         iteneraries.add(itinerary);
     }
 
-    public int calculateTotalCost() {
-        return 0;
-    }
-
-    public List<Activity> getActivity() {
+    /**
+     * Simple getter method for the activities catalogue array-list.
+     *
+     * This will be used in
+     * {@code List<Activity> activities = plannerApp.getActivities();} to avoid
+     * a compiler error due to {@link #activities} not being initialised where
+     * it's declared.
+     *
+     * @return The list of available activities.
+     */
+    public List<Activity> getActivities() {
         return activities;
     }
 
-//   public void clearLists(Activity activity, Itinerary itinerary){
-//       activity.clearActivity();
-//       itinerary.clearItinerary();
-//   }
-//    public void setActivity(List<Activity> activity) {
-//        this.activity = activity;
-//    } I don't think this is necessary or will be used (addActivity exists)
+    /**
+     * This method validates user input full-names and output relevant error
+     * messages and hints when the the name is entered in the wrong format.
+     *
+     * The code allows users to proceed only when the first and surname exist
+     * with only one space character and surname is less isn't longer than 11
+     * letters to prevent expected errors.
+     *
+     * @param fullName The full-name to be validated.
+     * @param scanner The Scanner object in work.
+     */
+    public static void nameInputValidation(String fullName, Scanner scanner) {
+        while (true) {
+            // Split the full name into parts using the space character
+            String[] nameParts = fullName.split(" ");
+
+            // Check if there are exactly two parts (first name and surname)
+            if (nameParts.length == 2) {
+                String firstName = nameParts[0];//this line is required
+                String surname = nameParts[1];
+                if (surname.length() > 11) {
+                    System.out.println("Invalid input. Surname must be less than 11 characters long.\n"
+                            + "Please enter your name again.");
+                    fullName = scanner.nextLine();
+                } else {
+                    break;//first and surname exist and surname isn't over 11 characters.
+                }
+            } else {
+                System.out.println("Invalid input. (Hint: Firstname<SPACE>Surname)\n"
+                        + "Please enter your name again.");
+                fullName = scanner.nextLine();
+            }
+        }
+    }
+
+    /**
+     * Validates user input for attendee count for mismatch exception to prevent
+     * the program from crashing when user enters letters in nextInt().
+     *
+     * @param scanner The Scanner object to read user input from.
+     * @return The valid integer entered by the user.
+     */
+    public static int attendeeCountValidation(Scanner scanner) {
+        int numbers = 0;
+        boolean isValidInput = false;
+        while (!isValidInput) {
+            try {
+                numbers = scanner.nextInt();
+                scanner.nextLine();
+                isValidInput = true; // Break the loop if input is successful
+            } catch (InputMismatchException e) {
+                System.out.println("Please enter a valid integer.");
+                scanner.next();
+            }
+        }
+        return numbers;
+    }
+
+    /**
+     * Prompts the user to enter a valid email address using a while loop.
+     *
+     * @param scanner The Scanner object for input.
+     * @return The valid email address entered by the user.
+     */
+    private static String getEmailWithValidation(Scanner scanner) {
+        String email;
+
+        while (true) {
+            email = scanner.nextLine();
+
+            if (isValidEmail(email)) {
+                break; // Exit the loop if the email is valid
+            } else {
+                System.out.println("Invalid email format. Please enter a valid email:");
+            }
+        }
+
+        return email;
+    }
+
+    /**
+     * Validates the email address using a simple regular expression.
+     *
+     * @param email The email address to validate.
+     * @return true if the email is valid, false otherwise.
+     */
+    private static boolean isValidEmail(String email) {
+        // Simple email validation using a regular expression
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        return email.matches(emailRegex);
+    }
+    
+    /**
+     * Validates user input for personal insurance and converts to Boolean
+     * value.
+     *
+     * 3 styles of answers are allowed for both yes and no. If the input doesn't
+     * fall in any of them the input will be deemed as invalid and user will be
+     * asked to input again.
+     *
+     * @param scanner The Scanner object to read user input from.
+     * @return The valid user input that was converted to Boolean value.
+     */
+    private static boolean validateInsurance(Scanner scanner) {
+        boolean hasInsurance = false;
+        System.out.println("Does the attendee have personal insurance? (Yes/No).");
+        String temporaryHasInsurance = scanner.nextLine();
+        while (true) {
+            if (temporaryHasInsurance.equalsIgnoreCase("Yes")
+                    || temporaryHasInsurance.equalsIgnoreCase("Y")
+                    || temporaryHasInsurance.equalsIgnoreCase("true")) {
+                hasInsurance = true;
+                System.out.println();
+                break;
+            } else if (temporaryHasInsurance.equalsIgnoreCase("No")
+                    || temporaryHasInsurance.equalsIgnoreCase("N")
+                    || temporaryHasInsurance.equalsIgnoreCase("false")) {
+                hasInsurance = false;
+                System.out.println();
+                break;
+            } else {
+                System.out.println("Please enter a valid input (Yes/No).");
+                temporaryHasInsurance = scanner.nextLine();
+            }
+        }
+        return hasInsurance;
+    }
+    
+    /**
+     * Reusable block of code for catching input mismatch exception for nextInt()
+     * method instead of writing try-catch many times.
+     * 
+     * @param scanner The Scanner object to read user input from.
+     * @return 
+     */
+    public static int protectedNextInt(Scanner scanner){
+        int numbers = 0;
+        boolean isValidInput = false;
+        while (!isValidInput) {
+            try {
+                numbers = scanner.nextInt();
+                scanner.nextLine();
+                isValidInput = true; // Break the loop if input is successful
+            } catch (InputMismatchException e) {
+                System.out.println("Please enter a valid integer.");
+                scanner.next();
+            }
+        }
+        return numbers;
+    }
+    
+    /**
+     * The main method to interact with the Activity Planner application.
+     *
+     * It provides a simple text-based menu for users to choose from various
+     * options. Users can display all activities, create an itinerary, or exit
+     * the application. The method uses a Scanner object to read user input and
+     * performs the corresponding actions based on the user's choice.
+     *
+     * @param args The command-line arguments (not used in this application).
+     */
     public static void main(String[] args) {
-        //product 
-        ActivityPlannerApp plannerApp = new ActivityPlannerApp();  // Create an instance of ActivityPlannerApp
+        // Creates an instance of ActivityPlannerApp
+        ActivityPlannerApp plannerApp = new ActivityPlannerApp();
         Scanner scanner = new Scanner(System.in);
 
-        //Add preset activity add-ons
-//        AddOn insurance = new AddOn("Insurance", 2300, "activity");
-//        AddOn travel = new AddOn("Travel", 2000, "activity");
-//        AddOn photography = new AddOn("Photography", 2500, "activity");
-//        plannerApp.addAddOn(insurance);
-//        plannerApp.addAddOn(travel);
-//        plannerApp.addAddOn(photography);
-        //Add preset itinerary add-ons
-//        AddOn accommodation = new AddOn("Accommodation", 2000, "itinerary");
-//        AddOn teaBreaks = new AddOn("Tea break", 700, "itinerary");
-//        AddOn lunch = new AddOn("Lunch", 2200, "itinerary");
-//        plannerApp.addAddOn(accommodation);
-//        plannerApp.addAddOn(teaBreaks);
-//        plannerApp.addAddOn(lunch);
-        // Add preset/default activities (more activities may be added later
-//        Activity paperBridge = new Activity(1000, "Building a bridge from paper", 1,
-//                "Let's build a bridge from paper!", "Teesside University",
-//                "16th Dec 15:00", 2, false);
-//        Activity assaultCourse = new Activity(10000, "SAS-style assault courses", 2,
-//                "Become stronks", "Saltburn",
-//                "15th Dec 7:00", 15, true);
-//        Activity cookery = new Activity(1700, "Cookery class", 3,
-//                "Let bro cook", "Teesside University",
-//                "9th Dec 14:00", 3, false);
-//        Activity hiking = new Activity(5900, "Hiking and nature walks", 4,
-//                "Hiking time!", "North York Moors Park", 
-//                "8th Dec 14:00", 6, true);
-//        plannerApp.addActivity(paperBridge);
-//        plannerApp.addActivity(assaultCourse);
-//        plannerApp.addActivity(cookery);
-//        plannerApp.addActivity(hiking);
-        
         OUTER:
         while (true) {
             System.out.println("1. Display All Activities");
             System.out.println("2. Create Itinerary");
             System.out.println("3. Exit");
             System.out.println("Enter your choice: ");
+
             int choice = scanner.nextInt();
-            scanner.nextLine();
+            scanner.nextLine();// Consume the newline character
+
             switch (choice) {
                 case 1:
                     plannerApp.displayActivities();
-                    break OUTER;
+                    break;
                 case 2:
                     createItinerary(plannerApp, scanner);
                     break OUTER;
@@ -161,126 +328,214 @@ public class ActivityPlannerApp {
                     break;
             }
         }
-
     }
 
+    /**
+     * Creates a new itinerary, gathers attendee information, adds activities
+     * and add-ons, and prints the itinerary receipt.
+     *
+     * This method was carefully developed to deliver a better user experience
+     * by displaying relevant lines of output as a block and putting one line
+     * gap for moving on to the next steps of the process.
+     *
+     * @param plannerApp The ActivityPlannerApp instance.
+     * @param scanner The Scanner object to read user input from.
+     */
     private static void createItinerary(ActivityPlannerApp plannerApp, Scanner scanner) {
         System.out.println("Creating Itinerary...");
         Itinerary itinerary = new Itinerary();
+        System.out.println();
 
         //Gather attendee information (then sell it to third party companies)
-        System.out.println("Enter attendee name: ");
+        System.out.println("Enter your full name (first surname): ");
         String attendeeName = scanner.nextLine();
+        nameInputValidation(attendeeName, scanner);
+        System.out.println();
 
         System.out.println("Enter attendee email: ");
-        String attendeeEmail = scanner.nextLine();
+        String attendeeEmail = getEmailWithValidation(scanner);
+        System.out.println();
 
-        boolean hasInsurance = false;
-        while (true) {
-            System.out.println("Does the attendee have personal insurance? (Yes/No)");
-            String temporaryHasInsurance = scanner.nextLine();
-            if (temporaryHasInsurance.equalsIgnoreCase("Yes") || 
-                    temporaryHasInsurance.equalsIgnoreCase("Y") || 
-                    temporaryHasInsurance.equalsIgnoreCase("true")) {
-                hasInsurance = true;
-                break;
-            } else if (temporaryHasInsurance.equalsIgnoreCase("No") || 
-                    temporaryHasInsurance.equalsIgnoreCase("N") || 
-                    temporaryHasInsurance.equalsIgnoreCase("false")) {
-                hasInsurance = false;
-                break;
-            } else {
-                System.out.println("Please type a valid input (Yes/No)");
-            }
-        }
+        boolean hasInsurance = validateInsurance(scanner);
 
         System.out.println("Enter the number of attendees: ");
-        int numbers = scanner.nextInt();
+        int numbers = attendeeCountValidation(scanner);
+        System.out.println();
 
-        Attendee attendee = new Attendee(attendeeName, attendeeEmail, 
+        Attendee attendee = new Attendee(attendeeName, attendeeEmail,
                 hasInsurance, numbers);
-        itinerary.addAttendee(attendee);
+        itinerary.setAttendee(attendee);
 
         // Add activities to the itinerary
-        plannerApp.displayActivities();
-        while (true) {//print first and ask options using do...while?//what?
-            System.out.print("Enter activity number to add to the itinerary (0 to finish): ");//would be better if user could add activity addons after adding one activity
-            int activityNumber = scanner.nextInt();
-            scanner.nextLine();
+        activityManager(plannerApp, scanner, itinerary);
 
-            if (activityNumber == 0 && !itinerary.getActivities().isEmpty()) {//user cant exit without taking any activities
-                break;
-            }
-            // Retrieve the selected activity from the plannerApp
-            List<Activity> activities = plannerApp.getActivity();
-            if (activityNumber > 0 && activityNumber <= activities.size()) {
-                Activity selectedActivity = activities.get(activityNumber - 1);
+        itineraryAddonManager(scanner, itinerary);
 
-                //copy the activity using copy constructor (thx steve it's so good)
-                Activity selectedActivityCopy = new Activity(selectedActivity);
-                // Add the selected activity to the itinerary
-                Activity activity = new Activity(selectedActivityCopy);
-                itinerary.addActivity(activity);
-
-                while (true) {
-                    activity.displayAddOns();
-                    System.out.println("Please select an add-on for " + activity.getTitle() +
-                            ", or enter 0 to proceed with no add-ons for this activity");
-                    System.out.println("Enter add-on name: ");
-                    String activityAddOnName = scanner.nextLine();
-
-                    if (activityAddOnName.equals("0")) {
-                        break;
-                    }
-
-                    // Check if the add-on name exists in activity.getAddOns
-                    if (activity.hasAddOn(activityAddOnName)) {
-                        // If it exists, add the add-on to the activity
-                        AddOn selectedAddOn = activity.getAddOnByName(activityAddOnName);
-                        activity.addAddOn(selectedAddOn);
-                        System.out.println("Add-on " + activityAddOnName + " added to " +
-                                activity.getTitle());
-                    } else {
-                        // If it doesn't exist, provide a hint for input
-                        System.out.println("Invalid add-on name. Please try again or " +
-                                "enter 0 to proceed with no add-ons for this activity.");
-                    }
-                }
-
-                System.out.println(selectedActivity.getTitle() + " added to the itinerary.");
-            } else {
-                System.out.println("Invalid activity number. Please try again.");
-            }
-
-        }
-        itinerary.displayAddOn();
-        while (true) {
-            //if i try to put this before the while loop it glitches and doesnt take addon names correctly idk why <- bug case
-            System.out.println("Please select add-on(s) for your itinerary or " +
-                    "enter 0 to proceed with no more add-ons for this itinerary.");
-            String itineraryAddOnName = scanner.nextLine();
-
-            if (itinerary.hasAddOn(itineraryAddOnName)) {
-                // If it exists, add the add-on to the activity
-                AddOn selectedAddOn = itinerary.getAddOnByName(itineraryAddOnName);
-                itinerary.addAddOn(selectedAddOn);
-                System.out.println("Add-on " + itineraryAddOnName + " added to the itinerary");
-            } else if (itineraryAddOnName.equals("0")) {
-                break;
-            } else {
-                // If it doesn't exist, provide a hint for input
-                System.out.println("Invalid add-on name. Please try again " +
-                        "or enter 0 to proceed with no add-ons for this activity.");
-            }
-        }
-
-        // Display itinerary and receipt
-        System.out.println("Printing receipt...");
-        System.out.println();
         itinerary.printReceipt();
 
     }
     
+    
+
+    /**
+     * Activity manager manages activities as it's in the name and calls
+     * activity add-on manager method. User can interact with the program to
+     * chose their activities and activity add-ons through this method.
+     *
+     * I tried a different method for keeping the output window cleaner for a
+     * better usability with setting askInput Boolean so individual lines of
+     * failed input result won't be asking for re-input and instead it is all
+     * managed in 1 place which makes it easier to maintain it as well.
+     *
+     * @param plannerApp The plannerApp instance that stores the activities catalogue list.
+     * @param scanner   The Scanner object to read user input from.
+     * @param itinerary The itinerary instance that is being worked on.
+     */
+    private static void activityManager(ActivityPlannerApp plannerApp, Scanner scanner, Itinerary itinerary) {
+        plannerApp.displayActivities();
+        System.out.print("Enter activity number to add to the itinerary \n"
+                + "or enter 0 to proceed to the next step: ");//would be better if user could add activity addons after adding one activity
+        int activityNumber = scanner.nextInt();
+        scanner.nextLine();
+        boolean repeatInput = false;
+        while (true) {//print first and ask options using do...while?//what?
+
+            if (repeatInput == true) {
+                System.out.print("Enter activity number to add to the itinerary\n"
+                        + "or enter 0 to proceed to the next step: ");
+                activityNumber = scanner.nextInt();
+                scanner.nextLine();
+            }
+
+            //user cant exit without taking any activities
+            if (activityNumber == 0 && !itinerary.getActivities().isEmpty()) {
+                break;
+            }
+            // Retrieve the selected activity from the plannerApp
+            List<Activity> activitiesCatalogue = plannerApp.activities;
+            if (activityNumber > 0 && activityNumber <= activitiesCatalogue.size()) {
+
+                //grab the activity from catalogue list
+                Activity selectedActivity = activitiesCatalogue.get(activityNumber - 1);
+
+                //copy the activity using copy constructor (thx to Steve this thing is so good)
+                Activity selectedActivityCopy = new Activity(selectedActivity);
+
+                // Add the selected activity to the itinerary
+                itinerary.addActivity(selectedActivityCopy);
+                //run the addon manager and store the return value
+                activityAddonManager(selectedActivityCopy, scanner);
+
+                System.out.println(selectedActivityCopy.getTitle() + " was added to the itinerary.");
+                System.out.println();
+//                System.out.println("Add another activity or enter 0 to proceed to the next step:");
+//                activityNumber = scanner.nextInt();
+//                scanner.nextLine();
+                repeatInput = true;
+            } else {
+                System.out.println("Invalid activity number. Please try again.");
+                repeatInput = true;
+            }
+        }
+    }
+    
+    /**
+     * activityAddonManager is a sub-method to activityManager. 
+     * 
+     * User will be asked for an input. The input will be inspected and the add-on will
+     * be added if the add-on of user choice exists and there will no duplication in 
+     * the array list. 
+     * 
+     * @param activity  The activity instance being worked on (being added an add-on to)
+     * @param scanner   The Scanner object to read user input from.
+     */
+    public static void activityAddonManager(Activity activity, Scanner scanner) {
+        activity.displayAddOns();
+        System.out.println("Please select an add-on for " + activity.getTitle() + ", \n"
+                + "or enter 0 to proceed to the next step.");
+        System.out.println("Enter an add-on name: ");
+        String activityAddOnName = scanner.nextLine();
+        
+        while (true) {
+            //break if input is 0
+            if (activityAddOnName.equals("0")) {
+                break;
+            } else if (activity.hasAddOn(activityAddOnName)) {
+                // Check if an add-on by the same name exists in the activities catalogue arraylist
+
+                // If it exists, add the add-on to the activity
+                AddOn selectedAddOn = activity.getAddOnByName(activityAddOnName);
+
+                if (activity.getAddOns().contains(selectedAddOn)) {
+                    System.out.println(selectedAddOn.getName() + " add-on already exists "
+                            + "in your list! \nPlease enter a valid add-on name or 0 to proceed:");
+                    activityAddOnName = scanner.nextLine();
+                } else {
+                    activity.addAddOn(selectedAddOn);
+                    System.out.println(selectedAddOn.getName() + " add-on was added to "
+                            + activity.getTitle() + ".");
+                    System.out.println();
+                    System.out.println("Add another add-on or enter 0 to proceed: ");
+                    activityAddOnName = scanner.nextLine();
+                }
+            } else {
+                // If it doesn't exist, provide a hint for input
+                System.out.println("Invalid add-on name. Please try again \n"
+                        + "or enter 0 to proceed to the next step.");
+                activityAddOnName = scanner.nextLine();
+
+            }
+        }
+    }
+
+    /**
+     * itineraryAddonManager is essentially an encapsulation of the big user
+     * interface code.
+     *
+     * This method gets called after user exits activity selection and displays
+     * a list of available add-ons and an instruction for what to do next. Once
+     * the list and instruction was shown user will get to input their choices.
+     *
+     * First it gets checked if the the add-on exists in the available list or
+     * not, if not it then checks to see if user instructed to exit by entering
+     * 0 or not, if not the method concludes user entered an invalid input and
+     * user will be asked to input a choice again.
+     *
+     * @param scanner The Scanner object in work.
+     * @param itinerary The itinerary instance that is being worked on.
+     */
+    private static void itineraryAddonManager(Scanner scanner, Itinerary itinerary) {
+        itinerary.displayAddOn();
+        System.out.print("Please select add-on(s) for your itinerary\n"
+                + "or enter 0 to proceed to the next step:");
+        String itineraryAddOnName = scanner.nextLine();
+
+        while (true) {
+            if (itineraryAddOnName.equals("0")) {
+                break;
+            } else if (itinerary.hasAddOn(itineraryAddOnName)) {
+                // If it exists, add the add-on to the activity
+                AddOn selectedAddOn = itinerary.getAddOnByName(itineraryAddOnName);
+                if (!itinerary.getAddOns().contains(selectedAddOn)){
+                itinerary.addAddOn(selectedAddOn);
+                System.out.println(selectedAddOn.getName() + " add-on was added to the itinerary.");
+                System.out.println();
+                System.out.println("Add another itinerary add-on or enter 0 to proceed");
+                itineraryAddOnName = scanner.nextLine();
+                } else {
+                    System.out.println("This add-on already exists in your itinerary!\n"
+                            + "Please choose another add-on or enter 0 to proceed to the next step:");
+                    itineraryAddOnName = scanner.nextLine();
+                }
+            } else {
+                // If it doesn't exist, provide a hint for input
+                System.out.println("Invalid add-on name. Please try again \n"
+                        + "or enter 0 to proceed to the next step.");
+                itineraryAddOnName = scanner.nextLine();
+            }
+        }
+        // Display itinerary and receipt
+        System.out.println("Printing receipt...\n");
+    }
 
 }
-//TODO display available itinerary addons and activity addons
