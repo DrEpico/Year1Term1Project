@@ -6,6 +6,7 @@ package c2197694.phase_2;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
@@ -96,7 +97,7 @@ public class Itinerary {
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < length; i++) {
             int randomIndex = random.nextInt(characters.length());
-            
+
             stringBuilder.append(characters.charAt(randomIndex));
         }
         return stringBuilder.toString();
@@ -264,6 +265,29 @@ public class Itinerary {
     }
 
     /**
+     * Reusable block of code for catching input mismatch exception for
+     * nextInt() method instead of writing try-catch many times.
+     *
+     * @param scanner The Scanner object to read user input from.
+     * @return
+     */
+    public static int protectedNextInt(Scanner scanner) {
+        int numbers = 0;
+        boolean isValidInput = false;
+        while (!isValidInput) {
+            try {
+                numbers = scanner.nextInt();
+                scanner.nextLine();
+                isValidInput = true; // Break the loop if input is successful
+            } catch (InputMismatchException e) {
+                System.out.println("Please enter a valid integer.");
+                scanner.next();
+            }
+        }
+        return numbers;
+    }
+
+    /**
      * Checks if attendee has a personal insurance that covers for the activity
      * that requires insurance based on the company rules.
      *
@@ -294,21 +318,19 @@ public class Itinerary {
                     while (true) {
                         System.out.println(activity.getTitle() + " requires insurance. \n"
                                 + "Please Select an option\n"
-                                + "1: Add Insurance for £" +
-                                    activity.getInsuranceAddOn().getCost() / 100 + "\n"
+                                + "1: Add Insurance for £"
+                                + activity.getInsuranceAddOn().getCost() / 100 + "\n"
                                 + "2: Remove " + activity.getTitle() + " from the itinerary\n"
                                 + "3: Discard itinerary");
-                        switch (scanner.nextInt()) {
+                        switch (protectedNextInt(scanner)) {
                             case 1:
                                 activity.addAddOn(activity.getInsuranceAddOn());
                                 System.out.println("Insurance addOn was added");
-                                scanner.nextLine();
                                 break OUTER;
                             case 2:
                                 shouldRemove = true;
                                 activityToRemove = activity;//Stores activity to be removed
                                 System.out.println("The activity was deleted from the itinerary");
-                                scanner.nextLine();
                                 break OUTER;
                             case 3:
                                 System.out.println("Discarding the process...");
@@ -482,8 +504,8 @@ public class Itinerary {
         // Handle the case when number is not greater than 0
         return "ERROR: Invalid parameter value. Number must not be negative.";
     }
-    
-    public List<AddOn> getAddOns(){
+
+    public List<AddOn> getAddOns() {
         return addOns;
     }
 
@@ -569,13 +591,8 @@ public class Itinerary {
         int subTotal = calculateSubTotal();
         System.out.println("|\t\t\tCost breakdown\t\t\t\t|");
         System.out.println("|\t\t\t\t\t\t\t\t|");
-        System.out.println("| Itinerary Add-ons\t\t\tSub-Total:\t£" + itineraryAddOnSubTotal + "\t|");
-        for (AddOn addOn : addOns) {
-            System.out.println("| - " + addOn.getName()
-                    + " @ £" + addOn.getCost() / 100 + " x " + attendee.getMembers()
-                    + " = £" + itineraryAddOnSubTotal + "\t\t\t\t|");
-        }
-        System.out.println("|\t\t\t\t\t\t\t\t|");
+
+        printReceiptItinearryAddOns(itineraryAddOnSubTotal);
 
         int i = 0;
         System.out.println("| Activities\t\t\t\t" + "Sub-Total:\t£" + subTotal + "\t|");
@@ -600,6 +617,25 @@ public class Itinerary {
                     + activityAddOnSubTotal * attendee.getMembers() / 100 + "\t|");
         }
         System.out.println("|\t\t\t\t\t\t\t\t|");
+    }
+
+    /**
+     * This method will be called inside printReceiptBody() and determines if
+     * itinerary add-ons part will be printed or not depending on the itinerary
+     * has add-ons registered by user or not.
+     *
+     * @param itineraryAddOnSubTotal The sub-total value to be printed.
+     */
+    public void printReceiptItinearryAddOns(int itineraryAddOnSubTotal) {
+        if (!addOns.isEmpty()) {
+            System.out.println("| Itinerary Add-ons\t\t\tSub-Total:\t£" + itineraryAddOnSubTotal + "\t|");
+            for (AddOn addOn : addOns) {
+                System.out.println("| - " + addOn.getName()
+                        + " @ £" + addOn.getCost() / 100 + " x " + attendee.getMembers()
+                        + " = £" + itineraryAddOnSubTotal + "\t\t\t\t|");
+            }
+            System.out.println("|\t\t\t\t\t\t\t\t|");
+        }
     }
 
     /**

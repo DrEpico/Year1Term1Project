@@ -171,28 +171,28 @@ public class ActivityPlannerApp {
         }
     }
 
-    /**
-     * Validates user input for attendee count for mismatch exception to prevent
-     * the program from crashing when user enters letters in nextInt().
-     *
-     * @param scanner The Scanner object to read user input from.
-     * @return The valid integer entered by the user.
-     */
-    public static int attendeeCountValidation(Scanner scanner) {
-        int numbers = 0;
-        boolean isValidInput = false;
-        while (!isValidInput) {
-            try {
-                numbers = scanner.nextInt();
-                scanner.nextLine();
-                isValidInput = true; // Break the loop if input is successful
-            } catch (InputMismatchException e) {
-                System.out.println("Please enter a valid integer.");
-                scanner.next();
-            }
-        }
-        return numbers;
-    }
+//    /**
+//     * Validates user input for attendee count for mismatch exception to prevent
+//     * the program from crashing when user enters letters in nextInt().
+//     *
+//     * @param scanner The Scanner object to read user input from.
+//     * @return The valid integer entered by the user.
+//     */
+//    public static int attendeeCountValidation(Scanner scanner) {
+//        int numbers = 0;
+//        boolean isValidInput = false;
+//        while (!isValidInput) {
+//            try {
+//                numbers = scanner.nextInt();
+//                scanner.nextLine();
+//                isValidInput = true; // Break the loop if input is successful
+//            } catch (InputMismatchException e) {
+//                System.out.println("Please enter a valid integer.");
+//                scanner.next();
+//            }
+//        }
+//        return numbers;
+//    }
 
     /**
      * Prompts the user to enter a valid email address using a while loop.
@@ -309,8 +309,7 @@ public class ActivityPlannerApp {
             System.out.println("3. Exit");
             System.out.println("Enter your choice: ");
 
-            int choice = scanner.nextInt();
-            scanner.nextLine();// Consume the newline character
+            int choice = protectedNextInt(scanner);
 
             switch (choice) {
                 case 1:
@@ -359,7 +358,7 @@ public class ActivityPlannerApp {
         boolean hasInsurance = validateInsurance(scanner);
 
         System.out.println("Enter the number of attendees: ");
-        int numbers = attendeeCountValidation(scanner);
+        int numbers = protectedNextInt(scanner);
         System.out.println();
 
         Attendee attendee = new Attendee(attendeeName, attendeeEmail,
@@ -395,16 +394,14 @@ public class ActivityPlannerApp {
         plannerApp.displayActivities();
         System.out.print("Enter activity number to add to the itinerary \n"
                 + "or enter 0 to proceed to the next step: ");//would be better if user could add activity addons after adding one activity
-        int activityNumber = scanner.nextInt();
-        scanner.nextLine();
+        int activityNumber = protectedNextInt(scanner);
         boolean repeatInput = false;
         while (true) {//print first and ask options using do...while?//what?
 
             if (repeatInput == true) {
                 System.out.print("Enter activity number to add to the itinerary\n"
                         + "or enter 0 to proceed to the next step: ");
-                activityNumber = scanner.nextInt();
-                scanner.nextLine();
+                activityNumber = protectedNextInt(scanner);
             }
 
             //user cant exit without taking any activities
