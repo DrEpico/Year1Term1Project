@@ -91,7 +91,7 @@ public class ActivityPlannerApp {
      *
      * @param activity The activity to be added to the list.
      */
-    public final void addActivity(Activity activity) {
+    private void addActivity(Activity activity) {
         activities.add(activity);
     }
 
@@ -100,7 +100,7 @@ public class ActivityPlannerApp {
      * such as title, number, description, location, date and time, duration,
      * and base cost for each activity.
      */
-    public void displayActivities() {
+    private void displayActivities() {
         for (Activity activity : activities) {
             System.out.println("Title: " + activity.getTitle());
             System.out.println("Activity Number: " + activity.getNumber());
@@ -118,7 +118,7 @@ public class ActivityPlannerApp {
      *
      * @param itinerary The itinerary to be added.
      */
-    public void addItinenary(Itinerary itinerary) {
+    protected void addItinenary(Itinerary itinerary) {
         iteneraries.add(itinerary);
     }
 
@@ -132,7 +132,7 @@ public class ActivityPlannerApp {
      *
      * @return The list of available activities.
      */
-    public List<Activity> getActivities() {
+    protected List<Activity> getActivities() {
         return activities;
     }
 
@@ -147,7 +147,7 @@ public class ActivityPlannerApp {
      * @param fullName The full-name to be validated.
      * @param scanner The Scanner object in work.
      */
-    public static void nameInputValidation(String fullName, Scanner scanner) {
+    private static void nameInputValidation(String fullName, Scanner scanner) {
         while (true) {
             // Split the full name into parts using the space character
             String[] nameParts = fullName.split(" ");
@@ -271,7 +271,7 @@ public class ActivityPlannerApp {
      * @param scanner The Scanner object to read user input from.
      * @return 
      */
-    public static int protectedNextInt(Scanner scanner){
+    private static int protectedNextInt(Scanner scanner){
         int numbers = 0;
         boolean isValidInput = false;
         while (!isValidInput) {
@@ -346,7 +346,7 @@ public class ActivityPlannerApp {
         System.out.println();
 
         //Gather attendee information (then sell it to third party companies)
-        System.out.println("Enter your full name (first surname): ");
+        System.out.println("Enter your full name (First Surname): ");
         String attendeeName = scanner.nextLine();
         nameInputValidation(attendeeName, scanner);
         System.out.println();
@@ -446,7 +446,7 @@ public class ActivityPlannerApp {
      * @param activity  The activity instance being worked on (being added an add-on to)
      * @param scanner   The Scanner object to read user input from.
      */
-    public static void activityAddonManager(Activity activity, Scanner scanner) {
+    private static void activityAddonManager(Activity activity, Scanner scanner) {
         activity.displayAddOns();
         System.out.println("Please select an add-on for " + activity.getTitle() + ", \n"
                 + "or enter 0 to proceed to the next step.");

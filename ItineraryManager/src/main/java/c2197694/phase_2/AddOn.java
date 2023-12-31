@@ -34,15 +34,15 @@ public class AddOn {
      * @return Fields of this class.
      */
     
-    public String getName() {
+    protected String getName() {
         return name;
     }
 
-    public int getCost() {
+    protected int getCost() {
         return cost;
     }
 
-    public String getType() {
+    protected String getType() {
         return type;
     }
     
@@ -52,15 +52,15 @@ public class AddOn {
      * @param name & other class fields
      */
     
-    public void setName(String name) {
+    protected void setName(String name) {
         this.name = name;
     }
 
-    public void setCost(int cost) {
+    protected void setCost(int cost) {
         this.cost = cost;
     }
     
-    public void setType(String type) {
+    protected void setType(String type) {
         this.type = type;
     }
 }

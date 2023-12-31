@@ -109,7 +109,7 @@ public class Itinerary {
      *
      * @return A random itinerary reference.
      */
-    public final String generateId() {
+    private final String generateId() {
         // Generate two random letters
         String randomLetters = generateRandomString(LETTERS, 2);
 
@@ -130,7 +130,7 @@ public class Itinerary {
      *
      * @return The itinerary ID.
      */
-    public String getId() {
+    protected String getId() {
         return id;
     }
 
@@ -141,7 +141,7 @@ public class Itinerary {
      *
      * @return The list of activities associated with the itinerary.
      */
-    public List<Activity> getActivities() {
+    protected List<Activity> getActivities() {
         return activities;
     }
 
@@ -151,7 +151,7 @@ public class Itinerary {
      *
      * @param activity The activity to be added to the list.
      */
-    public void addActivity(Activity activity) {
+    protected void addActivity(Activity activity) {
         if (!activities.contains(activity)) {
             activities.add(activity);
 //            System.out.println(activity.getTitle() + " was added to the itinerary");
@@ -165,7 +165,7 @@ public class Itinerary {
      *
      * @param addOn The itinerary add-on to be added.
      */
-    public void addAddOn(AddOn addOn) {//adds itinerary addons
+    protected void addAddOn(AddOn addOn) {//adds itinerary addons
         if (!addOns.contains(addOn)) {
             addOns.add(addOn);
 //            System.out.println(addOn.getName() + " was added to the itinerary");
@@ -180,7 +180,7 @@ public class Itinerary {
      *
      * @param addOn Add-on instance to be added to the catalogue/display list.
      */
-    public final void addDisplayAddOns(AddOn addOn) {
+    protected final void addDisplayAddOns(AddOn addOn) {
         if (!displayAddOns.contains(addOn)) {
             displayAddOns.add(addOn);
         }
@@ -191,7 +191,7 @@ public class Itinerary {
      *
      * @param attendee The attendee to be associated with this itinerary.
      */
-    public void setAttendee(Attendee attendee) {
+    protected void setAttendee(Attendee attendee) {
         this.attendee = attendee;
     }
 
@@ -200,7 +200,7 @@ public class Itinerary {
      * itinerary. The details include the title, activity cost, and a separator
      * line for each add-on.
      */
-    public void displayAddOn() {//display catalogue
+    protected void displayAddOn() {//display catalogue
         System.out.println("\n--------------------------------------");
         for (AddOn addOn : displayAddOns) {
             System.out.println("Title: " + addOn.getName());
@@ -218,7 +218,7 @@ public class Itinerary {
      * @return {@code true} if an add-on instance with the same name exists in
      * displayAddOns list and {@code false} otherwise.
      */
-    public boolean hasAddOn(String addOnName) {
+    protected boolean hasAddOn(String addOnName) {
         for (AddOn addOn : displayAddOns) {
             if (addOn.getName().equalsIgnoreCase(addOnName)) {
                 return true;
@@ -239,7 +239,7 @@ public class Itinerary {
      * exists or not.
      * @return Add-on that matches user input.
      */
-    public AddOn getAddOnByName(String addOnName) {
+    protected AddOn getAddOnByName(String addOnName) {
         for (AddOn addOn : displayAddOns) {
             if (addOn.getName().equalsIgnoreCase(addOnName)) {
                 return addOn;
@@ -255,7 +255,7 @@ public class Itinerary {
      * @return {@code true} if the list contains insurance add-on and
      * {@code false} otherwise.
      */
-    public boolean containsInsurance() {//insurance is an activity addon
+    protected boolean containsInsurance() {//insurance is an activity addon
         for (AddOn addOn : addOns) {
             if (addOn.getName().equalsIgnoreCase("Insurance")) {
                 return true; // Found an insurance add-on
@@ -271,7 +271,7 @@ public class Itinerary {
      * @param scanner The Scanner object to read user input from.
      * @return
      */
-    public static int protectedNextInt(Scanner scanner) {
+    private static int protectedNextInt(Scanner scanner) {
         int numbers = 0;
         boolean isValidInput = false;
         while (!isValidInput) {
@@ -308,7 +308,7 @@ public class Itinerary {
      * option is selected to avoid unexpected behavior for removing null from
      * the activities list.
      */
-    public void incuranceCheck() {
+    private void incuranceCheck() {
         Activity activityToRemove = null;
         boolean shouldRemove = false;
         if (!attendee.hasInsurance()) {
@@ -356,7 +356,7 @@ public class Itinerary {
      *
      * @param activity The activity to be removed from the itinerary.
      */
-    public void removeActivity(Activity activity) {
+    private void removeActivity(Activity activity) {
         if (activities.contains(activity)) {
             activities.remove(activity);
         }
@@ -377,7 +377,7 @@ public class Itinerary {
      * @return The cost for the entire itinerary without applying the discount
      * yet.
      */
-    public double calculateCost() {//without discounts applied
+    private double calculateCost() {//without discounts applied
         double totalCost = 0;
         for (Activity activity : activities) {
             totalCost += (double) activity.calculateCostWithAddOn();//go back to old code
@@ -428,7 +428,7 @@ public class Itinerary {
      *
      * @return The total discord amount in pounds.
      */
-    public double calculateDiscountInPounds() {
+    private double calculateDiscountInPounds() {
         double totalCost = calculateCost();
         int discountRate = calculateDiscountPercentage();
         // Calculate the discount amount
@@ -445,7 +445,7 @@ public class Itinerary {
      *
      * @return Final cost of the itinerary discount applied.
      */
-    public double applyDiscount() {
+    private double applyDiscount() {
         double finalCost = calculateCost();
         double discountAmount = calculateDiscountInPounds();
         finalCost = (finalCost / 100) - discountAmount;
@@ -458,7 +458,7 @@ public class Itinerary {
      *
      * @return The formatted string.
      */
-    public String getAttendeeInitialSurname() {
+    private String getAttendeeInitialSurname() {
         String fullName = attendee.getName();
         // Split the full name into first name and surname
         String[] fullNameArray = fullName.split(" ");
@@ -484,7 +484,7 @@ public class Itinerary {
      * @param number The integer to be converted.
      * @return The string representation of the number.
      */
-    public String getStringNumber(int number) {
+    private String getStringNumber(int number) {
         if (number > 0) {
             switch (number) {
                 case 1:
@@ -505,7 +505,7 @@ public class Itinerary {
         return "ERROR: Invalid parameter value. Number must not be negative.";
     }
 
-    public List<AddOn> getAddOns() {
+    protected List<AddOn> getAddOns() {
         return addOns;
     }
 
@@ -551,7 +551,7 @@ public class Itinerary {
      * Calls 3 encapsulated/split methods to perform one task of printing the
      * receipt.
      */
-    public void printReceipt() {
+    protected void printReceipt() {
         printReceiptHeader();
         printReceiptBody();
         printReceiptFooter();
@@ -562,7 +562,7 @@ public class Itinerary {
      * including client information, reference, date, activities count,
      * attendees count, and the cost for the entire itienrary.
      */
-    public void printReceiptHeader() {
+    private void printReceiptHeader() {
         incuranceCheck();
         String initialSurname = getAttendeeInitialSurname();
         String reference = getId();
@@ -586,7 +586,7 @@ public class Itinerary {
      * discounts, and provides a detailed breakdown of the itinerary and
      * associated add-ons.
      */
-    public void printReceiptBody() {
+    private void printReceiptBody() {
         int itineraryAddOnSubTotal = calculateAddOnsSubTotal() / 100 * attendee.getMembers();
         int subTotal = calculateSubTotal();
         System.out.println("|\t\t\tCost breakdown\t\t\t\t|");
@@ -626,7 +626,7 @@ public class Itinerary {
      *
      * @param itineraryAddOnSubTotal The sub-total value to be printed.
      */
-    public void printReceiptItinearryAddOns(int itineraryAddOnSubTotal) {
+    private void printReceiptItinearryAddOns(int itineraryAddOnSubTotal) {
         if (!addOns.isEmpty()) {
             System.out.println("| Itinerary Add-ons\t\t\tSub-Total:\t£" + itineraryAddOnSubTotal + "\t|");
             for (AddOn addOn : addOns) {
@@ -644,7 +644,7 @@ public class Itinerary {
      * total discount in pounds and formats it to display up to 1 digit after
      * the decimal point.
      */
-    public void printReceiptFooter() {
+    private void printReceiptFooter() {
         double totalDiscount = calculateDiscountInPounds();
         // Format the total discount to display up to 1 digit after the decimal point
         String formattedTotalDiscount = String.format("%.1f", totalDiscount);

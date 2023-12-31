@@ -101,7 +101,7 @@ public class Activity{
      *
      * @param addOn The activity add-on to be added.
      */
-    public void addAddOn(AddOn addOn) {//adds itinerary addons
+    protected void addAddOn(AddOn addOn) {//adds itinerary addons
         if (!addOns.contains(addOn)) {
             addOns.add(addOn);
         } else {
@@ -115,7 +115,7 @@ public class Activity{
      * 
      * @param addOn The add-on instance to be removed.
      */
-    public void removeAddOn(AddOn addOn) {
+    protected void removeAddOn(AddOn addOn) {
         if(addOns.contains(addOn)){
             addOns.remove(addOn);
         }
@@ -127,7 +127,7 @@ public class Activity{
      *
      * @param addOn The add-on to be added for display purposes.
      */
-    public final void addDisplayAddOn(AddOn addOn){
+    protected final void addDisplayAddOn(AddOn addOn){
         if (!addOns.contains(addOn)){
             displayAddOns.add(addOn);
         }
@@ -138,7 +138,7 @@ public class Activity{
      *
      * @param addOn The add-on to be removed from displayAddOns list.
      */
-    public void removeDisplayAddOn(AddOn addOn){
+    protected void removeDisplayAddOn(AddOn addOn){
         displayAddOns.remove(addOn);
     }
     
@@ -148,7 +148,7 @@ public class Activity{
      * This was a primary solution to the issue caused by shared activity instances.
      * Currently not in use.
      */
-    public void clearActivity(){
+    protected void clearActivity(){
         addOns.clear();
     }
     
@@ -161,7 +161,7 @@ public class Activity{
      * @return {@code true} if the activity instance in the itinerary has an insurance 
      * add-on, {@code false} otherwise.
      */
-    public boolean containsInsurance() {
+    protected boolean containsInsurance() {
         for (AddOn addOn: addOns) {
             if (addOn.getName().equalsIgnoreCase("Insurance")) {
                 return true; // Found an insurance add-on
@@ -178,7 +178,7 @@ public class Activity{
      * 
      * @return The total cost of one activity instance with its associated add-ons.
      */
-    public int calculateCostWithAddOn(){
+    protected int calculateCostWithAddOn(){
         int activityCost = this.getBaseCost();
 
         for (AddOn addOn : addOns) {
@@ -193,7 +193,7 @@ public class Activity{
      * This method is useful for presenting the details of the add-ons in a user-friendly format.
      * The information displayed includes the name (title) and cost of each add-on, separated by a line.
      */
-    public void displayAddOns() {
+    protected void displayAddOns() {
         System.out.println("\n--------------------------------------");
         for (AddOn addOn : displayAddOns) {
             System.out.println("Title: " + addOn.getName());
@@ -211,7 +211,7 @@ public class Activity{
      * @param addOnName The name of the add-on to check for.
      * @return {@code true} if the activity has an add-on with the specified name, {@code false} otherwise.
      */
-    public boolean hasAddOn(String addOnName) {
+    protected boolean hasAddOn(String addOnName) {
         for (AddOn addOn : displayAddOns) {
             if (addOn.getName().equalsIgnoreCase(addOnName)) {
                 return true;
@@ -230,7 +230,7 @@ public class Activity{
      * @param addOnName The name of the add-on to retrieve. 
      * @return The add-on with the specified name, or {@code null} if not found.
      */
-    public AddOn getAddOnByName(String addOnName) {
+    protected AddOn getAddOnByName(String addOnName) {
         for (AddOn addOn : displayAddOns) {
             if (addOn.getName().equalsIgnoreCase(addOnName)) {
                 return addOn;
@@ -244,7 +244,7 @@ public class Activity{
      * 
      * @return The list of add-ons.
      */
-    public List<AddOn> getAddOns() {
+    protected List<AddOn> getAddOns() {
         return addOns;
     }
     
@@ -254,47 +254,47 @@ public class Activity{
      * @return Fields of this class.
      */
     
-    public int getBaseCost(){
+    protected int getBaseCost(){
         return baseCost;
     }
     
-    public String getTitle() {
+    protected String getTitle() {
         return title;
     }
     
-    public int getNumber(){
+    protected int getNumber(){
         return number;
     }
     
-    public String getDescription() {
+    protected String getDescription() {
         return description;
     }
     
-    public String getLocation() {
+    protected String getLocation() {
         return location;
     }
     
-    public String getDateTime() {
+    protected String getDateTime() {
         return dateTime;
     }
     
-    public int getDuration() {
+    protected int getDuration() {
         return duration;
     }
     
-    public boolean requiresInsurance(){
+    protected boolean requiresInsurance(){
         return requiresInsurance;
     }
     
-    public AddOn getInsuranceAddOn(){
+    protected AddOn getInsuranceAddOn(){
         return insurance;
     }
     
-    public AddOn getTravelAddOn(){
+    protected AddOn getTravelAddOn(){
         return insurance;
     }
     
-    public AddOn getPhotographyAddOn(){
+    protected AddOn getPhotographyAddOn(){
         return insurance;
     }
     
@@ -304,27 +304,27 @@ public class Activity{
      * @param baseCost & other class fields
      */
     
-     public void setBaseCost(int baseCost) {
+    protected void setBaseCost(int baseCost) {
         this.baseCost = baseCost;
     }
 
-    public void setTitle(String title) {
+    protected void setTitle(String title) {
         this.title = title;
     }
 
-    public void setDescription(String description) {
+    protected void setDescription(String description) {
         this.description = description;
     }
 
-    public void setLocation(String location) {
+    protected void setLocation(String location) {
         this.location = location;
     }
 
-    public void setDateTime(String dateTime) {
+    protected void setDateTime(String dateTime) {
         this.dateTime = dateTime;
     }
 
-    public void setDuration(int duration) {
+    protected void setDuration(int duration) {
         this.duration = duration;
     }
     
@@ -334,7 +334,7 @@ public class Activity{
      * 
      * Currently not in use and is saved for later use.
      */
-    public void printAddOns(){
+    protected void printAddOns(){
         for (AddOn addOn : addOns){
             System.out.println("addon name: " + addOn.getName());
         }
