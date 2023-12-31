@@ -39,19 +39,19 @@ public class Attendee {
      * @return Fields of this class.
      */
     
-    public String getName() {
+    protected String getName() {
         return name;
     }
 
-    public String getContactInfo() {
+    protected String getContactInfo() {
         return contactInfo;
     }
 
-    public int getMembers() {
+    protected int getMembers() {
         return members;
     }
 
-    public boolean hasInsurance() {
+    protected boolean hasInsurance() {
         return hasInsurance;
     }
     
@@ -61,19 +61,19 @@ public class Attendee {
      * @param name & other class fields
      */
 
-    public void setName(String name) {
+    protected void setName(String name) {
         this.name = name;
     }
 
-    public void setContactInfo(String contactInfo) {
+    protected void setContactInfo(String contactInfo) {
         this.contactInfo = contactInfo;
     }
 
-    public void setMembers(int members) {
+    protected void setMembers(int members) {
         this.members = members;
     }
 
-    public void setInsurance(boolean hasInsurance) {
+    protected void setInsurance(boolean hasInsurance) {
         this.hasInsurance = hasInsurance;
     }
     

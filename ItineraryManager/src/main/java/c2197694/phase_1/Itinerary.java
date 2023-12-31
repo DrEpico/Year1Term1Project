@@ -83,7 +83,7 @@ public class Itinerary {
      *
      * @return A random itinerary reference.
      */
-    public final String generateId() {
+    private final String generateId() {
         // Generate two random letters
         String randomLetters = generateRandomString(LETTERS, 2);
 
@@ -104,7 +104,7 @@ public class Itinerary {
      *
      * @return The itinerary ID.
      */
-    public String getId() {
+    protected String getId() {
         return id;
     }
 
@@ -114,7 +114,7 @@ public class Itinerary {
      *
      * @param activity The activity to be added to the list.
      */
-    public void addActivity(Activity activity) {
+    protected void addActivity(Activity activity) {
         if (!activities.contains(activity)){
             activities.add(activity);
             System.out.println(activity.getTitle() + " was added to the itinerary");
@@ -128,7 +128,7 @@ public class Itinerary {
      *
      * @param addOn The itinerary add-on to be added.
      */
-    public void addAddOn(AddOn addOn) {//adds itinerary addons
+    protected void addAddOn(AddOn addOn) {//adds itinerary addons
         addOns.add(addOn);
         System.out.println(addOn.getName() + " was added to the itinerary");
     }
@@ -138,7 +138,7 @@ public class Itinerary {
      *
      * @param attendee The attendee to be associated with this itinerary.
      */
-    public void setAttendee(Attendee attendee) {
+    protected void setAttendee(Attendee attendee) {
         this.attendee = attendee;
         
     }
@@ -164,7 +164,7 @@ public class Itinerary {
      * option is selected to avoid unexpected behavior for removing null from
      * the activities list.
      */
-    public void incuranceCheck() {
+    private void incuranceCheck() {
         Activity activityToRemove = null;
         boolean shouldRemove = false;
         if (!attendee.hasInsurance()) {
@@ -174,12 +174,12 @@ public class Itinerary {
                     while (true) {
                         System.out.println(activity.getTitle() + " requires insurance. \n"
                                 + "Please Select an option\n"
-                                + "1: Add Insurance for £" + activity.insurance.getCost() / 100 + "\n"
+                                + "1: Add Insurance for £" + activity.getInsuranceAddOn().getCost() / 100 + "\n"
                                 + "2: Remove " + activity.getTitle() + " from the itinerary\n"
                                 + "3: Discard itinerary");
                         switch (scanner.nextInt()) {
                             case 1:
-                                activity.addAddOn(activity.insurance);
+                                activity.addAddOn(activity.getInsuranceAddOn());
                                 System.out.println("Insurance addOn was added");
                                 break OUTER;
                             case 2:
@@ -211,7 +211,7 @@ public class Itinerary {
      *
      * @param activity The activity to be removed from the itinerary.
      */
-    public void removeActivity(Activity activity) {
+    protected void removeActivity(Activity activity) {
         activities.remove(activity);
         System.out.println(activity.getTitle() + " was removed");
     }
@@ -279,7 +279,7 @@ public class Itinerary {
      *
      * @return The total cost of the itinerary in pence.
      */
-    public double displayFinalCost() {
+    protected double displayFinalCost() {
         incuranceCheck();
         double individualItineraryCost = (double) calculateCost()/100;
         double finalItineraryCost = (double) calculateCost()/100 * attendee.getMembers();
@@ -297,15 +297,15 @@ public class Itinerary {
      * 
      * @return add-on object
      */
-    public AddOn getAccommodationAddOn(){
+    protected AddOn getAccommodationAddOn(){
         return accommodation;
     }
     
-    public AddOn getTeaBreakAddOn(){
+    protected AddOn getTeaBreakAddOn(){
         return teaBreak;
     }
     
-    public AddOn getLunchAddOn(){
+    protected AddOn getLunchAddOn(){
         return lunch;
     }
 }

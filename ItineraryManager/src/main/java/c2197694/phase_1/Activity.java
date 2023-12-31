@@ -33,9 +33,9 @@ public class Activity{
      * 
      * Activity add-ons are instantiated in the Activity class.
      */
-    public AddOn insurance = new AddOn("Insurance", 1300, "activity");
-    public AddOn travel = new AddOn("Travel", 1000, "activity");
-    public AddOn photography = new AddOn("Photography", 1400, "activity");
+    private final AddOn insurance = new AddOn("Insurance", 1300, "activity");
+    private final AddOn travel = new AddOn("Travel", 1000, "activity");
+    private final AddOn photography = new AddOn("Photography", 1400, "activity");
     
     /**
      * Parameterized constructor for creating an activity.
@@ -89,7 +89,7 @@ public class Activity{
      *
      * @param addOn The activity add-on to be added.
      */
-    public void addAddOn(AddOn addOn) {//adds itinerary addons
+    protected void addAddOn(AddOn addOn) {//adds itinerary addons
         if (!addOns.contains(addOn)) {
             addOns.add(addOn);
             System.out.println(addOn.getName() + " was added to the itinerary");
@@ -104,7 +104,7 @@ public class Activity{
      * 
      * @param addOn The add-on instance to be removed.
      */
-    public void removeAddOn(AddOn addOn) {
+    protected void removeAddOn(AddOn addOn) {
         if(addOns.contains(addOn)){
             addOns.remove(addOn);
         }
@@ -116,7 +116,7 @@ public class Activity{
      * This was a primary solution to the issue caused by shared activity instances.
      * Currently not in use.
      */
-    public void clearActivity(){
+    protected void clearActivity(){
         addOns.clear();
     }
     
@@ -129,7 +129,7 @@ public class Activity{
      * @return {@code true} if the activity instance in the itinerary has an insurance 
      * add-on, {@code false} otherwise.
      */
-    public boolean containsInsurance() {//currently not used
+    protected boolean containsInsurance() {//currently not used
         for (AddOn addOn : addOns) {
             if (addOn.getName().equalsIgnoreCase("Insurance")) {
                 return true; // Found an insurance add-on
@@ -146,7 +146,7 @@ public class Activity{
      * 
      * @return The total cost of one activity instance with its associated add-ons.
      */
-    public int calculateCostWithAddOn(){
+    protected int calculateCostWithAddOn(){
         int activityCost = this.getBaseCost();
 
         for (AddOn addOn : addOns) {
@@ -160,7 +160,7 @@ public class Activity{
      * 
      * @return The list of add-ons.
      */
-    public List<AddOn> getAddOns() {
+    protected List<AddOn> getAddOns() {
         return addOns;
     }
     
@@ -170,36 +170,48 @@ public class Activity{
      * @return Fields of this class.
      */
     
-    public int getBaseCost(){
+    protected int getBaseCost(){
         return baseCost;
     }
     
-    public String getTitle() {
+    protected String getTitle() {
         return title;
     }
     
-    public int getNumber(){
+    protected int getNumber(){
         return number;
     }
     
-    public String getDescription() {
+    protected String getDescription() {
         return description;
     }
     
-    public String getLocation() {
+    protected String getLocation() {
         return location;
     }
     
-    public String getDateTime() {
+    protected String getDateTime() {
         return dateTime;
     }
     
-    public int getDuration() {
+    protected int getDuration() {
         return duration;
     }
     
-    public boolean requiresInsurance(){
+    protected boolean requiresInsurance(){
         return requiresInsurance;
+    }
+    
+    protected AddOn getInsuranceAddOn(){
+        return insurance;
+    }
+    
+    protected AddOn getTravelAddOn(){
+        return insurance;
+    }
+    
+    protected AddOn getPhotographyAddOn(){
+        return insurance;
     }
     
     /**
@@ -208,27 +220,27 @@ public class Activity{
      * @param baseCost & other class fields
      */
     
-     public void setBaseCost(int baseCost) {
+    protected void setBaseCost(int baseCost) {
         this.baseCost = baseCost;
     }
 
-    public void setTitle(String title) {
+    protected void setTitle(String title) {
         this.title = title;
     }
 
-    public void setDescription(String description) {
+    protected void setDescription(String description) {
         this.description = description;
     }
 
-    public void setLocation(String location) {
+    protected void setLocation(String location) {
         this.location = location;
     }
 
-    public void setDateTime(String dateTime) {
+    protected void setDateTime(String dateTime) {
         this.dateTime = dateTime;
     }
 
-    public void setDuration(int duration) {
+    protected void setDuration(int duration) {
         this.duration = duration;
     }
     

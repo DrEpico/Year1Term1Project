@@ -73,7 +73,7 @@ public class ActivityPlannerApp {
     /**
      * Activity planner app constructor initialises activities list.
      */
-    public ActivityPlannerApp() {
+    private ActivityPlannerApp() {
         this.activities = new ArrayList<>();
     }
 
@@ -82,7 +82,7 @@ public class ActivityPlannerApp {
      *
      * @param activity The activity to be added to the list by users.
      */
-    public void addActivity(Activity activity) {
+    protected void addActivity(Activity activity) {
         System.out.println(activity.getTitle() + " was added to the itinerary");
         activities.add(activity);
 
@@ -93,7 +93,7 @@ public class ActivityPlannerApp {
      * such as title, number, description, location, date and time, duration,
      * and base cost for each activity.
      */
-    public void displayActivities() {
+    private void displayActivities() {
         for (Activity activity : activities) {
             System.out.println("Title: " + activity.getTitle());
             System.out.println("Activity Number: " + activity.getNumber());
@@ -111,7 +111,7 @@ public class ActivityPlannerApp {
      *
      * @param itinerary The itinerary to be added.
      */
-    public void addItinenary(Itinerary itinerary) {
+    protected void addItinenary(Itinerary itinerary) {
         iteneraries.add(itinerary);
     }
 
@@ -137,14 +137,14 @@ public class ActivityPlannerApp {
         //copied activity from orignal instance
         Activity paperBridge1 = new Activity(paperBridge);
         itinerary1.addActivity(paperBridge1);//£5
-        paperBridge1.addAddOn(paperBridge1.travel);//£10
+        paperBridge1.addAddOn(paperBridge1.getTravelAddOn());//£10
         //copied activity from orignal instance
         Activity assaultCourse1 = new Activity(assaultCourse);
         itinerary1.addActivity(assaultCourse1);//£90
-        assaultCourse1.addAddOn(assaultCourse1.insurance);//£13
+        assaultCourse1.addAddOn(assaultCourse1.getInsuranceAddOn());//£13
         //itinerary add-on
         itinerary1.addAddOn(itinerary1.getLunchAddOn());//£17
-        //should be £145 x 3 with 5% activity count discount = 180.5 -> £180
+        //should be £145 x 3 with 5% activity count discount 
         itinerary1.displayFinalCost(); 
         
         // Itinerary 2
@@ -155,12 +155,12 @@ public class ActivityPlannerApp {
         //copied activity from orignal instance
         Activity assaultCourse2 = new Activity(assaultCourse);
         itinerary2.addActivity(assaultCourse2);//£90
-        assaultCourse2.addAddOn(assaultCourse2.insurance);
+        assaultCourse2.addAddOn(assaultCourse2.getInsuranceAddOn());
         itinerary2.addActivity(hiking);//£30
         //itinerary add-on
         itinerary2.addAddOn(itinerary2.getAccommodationAddOn());//£17
         
-        itinerary2.displayFinalCost();//should be £202
+        itinerary2.displayFinalCost();//should be 
 
         //test field
         System.out.println("----------------------TEST STUFF-----------------------");
