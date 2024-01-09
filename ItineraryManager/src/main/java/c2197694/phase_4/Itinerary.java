@@ -168,7 +168,6 @@ public class Itinerary {
     protected void addActivity(Activity activity) {
         if (!activities.contains(activity)) {
             activities.add(activity);
-//            System.out.println(activity.getTitle() + " was added to the itinerary");
         } else {
             System.out.println(activity.getTitle() + " already exists in your list of activities!");
         }
@@ -182,7 +181,6 @@ public class Itinerary {
     protected void addAddOn(AddOn addOn) {//adds itinerary addons
         if (!addOns.contains(addOn)) {
             addOns.add(addOn);
-//            System.out.println(addOn.getName() + " was added to the itinerary");
         } else {
             System.out.println(addOn.getName() + " already exists in list of itinerary add-ons!");
         }
@@ -209,10 +207,19 @@ public class Itinerary {
         this.attendee = attendee;
     }
     
+    /**
+     * Sets the lead attendee for itinerary.
+     *
+     * @param id The ID to be set.
+     */
     protected void setId(String id){
         this.id = id;
     }
     
+    /**
+     * Sets date for itinerary instance.
+     * @param date The date to be set
+     */
     protected void setDate(String date){
         this.date = date;
     }
@@ -701,6 +708,10 @@ public class Itinerary {
         System.out.println("+===============================================================+");
     }
     
+    /**
+     * Prints itineraries initiated through option 3 of the command line UI (read
+     * from the text file).
+     */
     public void printItinerary(){
         int activitiesSize = activities.size();
         System.out.println(attendee.getName() + "\t" + attendee.getMembers() + "\t\t" + activitiesSize + "\t\t\t" + applyDiscount());

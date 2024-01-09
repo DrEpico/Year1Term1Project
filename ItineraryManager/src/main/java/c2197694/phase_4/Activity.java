@@ -221,7 +221,6 @@ public class Activity{
                 return true;
             }
         }
-//        System.out.println(displayAddOns.size());
         return false;
     }
     
@@ -369,23 +368,3 @@ public class Activity{
    
     
 }
-
-/*
-Lead Attendee	Total Attendees	Total Activities	Total Cost
-Ali Dadashipour	1		1			5.0
-
-The number should be 18! not 5 
-it is because displayAddOns list is empty in here
-
-    protected boolean hasAddOnByCode(String addOnCode) {
-        for (AddOn addOn : displayAddOns) {
-            String code = addOn.getCode();
-            if (addOn.getCode().equalsIgnoreCase(addOnCode)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-so it returns zero
-*/

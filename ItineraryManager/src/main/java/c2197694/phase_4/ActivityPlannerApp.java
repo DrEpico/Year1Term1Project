@@ -198,7 +198,7 @@ public class ActivityPlannerApp {
         formattedItinerary.append(itinerary.getFinalCost()).append('\t');
         formattedItinerary.append(itinerary.getActivities().size()).append('\t');
         formattedItinerary.append(itinerary.getAttendee().getMembers()).append('\t');
-        
+
         int activitiesSize = itinerary.getActivities().size();
         // Append activity details
 //        for (int i = 0; i < itinerary.getActivities().size(); i++) {
@@ -288,28 +288,6 @@ public class ActivityPlannerApp {
         }
     }
 
-//    /**
-//     * Validates user input for attendee count for mismatch exception to prevent
-//     * the program from crashing when user enters letters in nextInt().
-//     *
-//     * @param scanner The Scanner object to read user input from.
-//     * @return The valid integer entered by the user.
-//     */
-//    public static int attendeeCountValidation(Scanner scanner) {
-//        int numbers = 0;
-//        boolean isValidInput = false;
-//        while (!isValidInput) {
-//            try {
-//                numbers = scanner.nextInt();
-//                scanner.nextLine();
-//                isValidInput = true; // Break the loop if input is successful
-//            } catch (InputMismatchException e) {
-//                System.out.println("Please enter a valid integer.");
-//                scanner.next();
-//            }
-//        }
-//        return numbers;
-//    }
     /**
      * Prompts the user to enter a valid email address using a while loop.
      *
@@ -318,17 +296,17 @@ public class ActivityPlannerApp {
      */
     private static String getEmailWithValidation(Scanner scanner) {
         String email;
-        
+
         while (true) {
             email = scanner.nextLine();
-            
+
             if (isValidEmail(email)) {
                 break; // Exit the loop if the email is valid
             } else {
                 System.out.println("Invalid email format. Please enter a valid email:");
             }
         }
-        
+
         return email;
     }
 
@@ -407,8 +385,9 @@ public class ActivityPlannerApp {
      * The main method to interact with the Activity Planner application.
      *
      * It provides a simple text-based menu for users to choose from various
-     * options. Users can display all activities, create an itinerary, or exit
-     * the application. The method uses a Scanner object to read user input and
+     * options. Users can display all activities, create an itinerary, read from
+     * the database text file and load itineraries for GUI or exit the
+     * application. The method uses a Scanner object to read user input and
      * performs the corresponding actions based on the user's choice.
      *
      * @param args The command-line arguments (not used in this application).
@@ -417,7 +396,7 @@ public class ActivityPlannerApp {
         // Creates an instance of ActivityPlannerApp
         ActivityPlannerApp plannerApp = new ActivityPlannerApp();
         Scanner scanner = new Scanner(System.in);
-        
+
         OUTER:
         while (true) {
             System.out.println("1. Display All Activities");
@@ -425,9 +404,9 @@ public class ActivityPlannerApp {
             System.out.println("3. Read database and display stored itineraries");
             System.out.println("4. Exit");
             System.out.println("Enter your choice: ");
-            
+
             int choice = protectedNextInt(scanner);
-            
+
             switch (choice) {
                 case 1:
                     plannerApp.displayActivities();
@@ -437,8 +416,9 @@ public class ActivityPlannerApp {
                     break OUTER;
                 case 3:
                     plannerApp.readItinerariesFromFile();
-                    
-                    System.out.println("Lead Attendee\tTotal Attendees\tTotal Activities\tTotal Cost");
+
+                    System.out.println("Lead Attendee\tTotal Attendees\t"
+                            + "Total Activities\tTotal Cost");
                     for (Itinerary itinerary : plannerApp.itineraries) {
                         itinerary.printItinerary();
                     }
@@ -474,29 +454,29 @@ public class ActivityPlannerApp {
         String attendeeName = scanner.nextLine();
         nameInputValidation(attendeeName, scanner);
         System.out.println();
-        
+
         System.out.println("Enter attendee email: ");
         String attendeeEmail = getEmailWithValidation(scanner);
         System.out.println();
-        
+
         boolean hasInsurance = validateInsurance(scanner);
-        
+
         System.out.println("Enter the number of attendees: ");
         int numbers = protectedNextInt(scanner);
         System.out.println();
-        
+
         Attendee attendee = new Attendee(attendeeName, attendeeEmail,
                 hasInsurance, numbers);
         itinerary.setAttendee(attendee);
 
         // Add activities to the itinerary
         activityManager(plannerApp, scanner, itinerary);
-        
+
         itineraryAddonManager(scanner, itinerary);
 
         //prints receipt
         itinerary.printReceipt();
-        
+
         String filePath = "ItineraryDatabase.txt";
         //prints itinerary out to the txt file
         writeItineraryToFile(itinerary, filePath);
@@ -520,11 +500,10 @@ public class ActivityPlannerApp {
     private static void activityManager(ActivityPlannerApp plannerApp, Scanner scanner, Itinerary itinerary) {
         plannerApp.displayActivities();
         System.out.print("Enter activity number to add to the itinerary \n"
-                + "or enter 0 to proceed to the next step: ");//would be better if user could add activity addons after adding one activity
+                + "or enter 0 to proceed to the next step: ");
         int activityNumber = protectedNextInt(scanner);
         boolean repeatInput = false;
-        while (true) {//print first and ask options using do...while?//what?
-
+        while (true) {
             if (repeatInput == true) {
                 System.out.print("Enter activity number to add to the itinerary\n"
                         + "or enter 0 to proceed to the next step: ");
@@ -549,12 +528,9 @@ public class ActivityPlannerApp {
                 itinerary.addActivity(selectedActivityCopy);
                 //run the addon manager and store the return value
                 activityAddonManager(selectedActivityCopy, scanner);
-                
+
                 System.out.println(selectedActivityCopy.getTitle() + " was added to the itinerary.");
                 System.out.println();
-//                System.out.println("Add another activity or enter 0 to proceed to the next step:");
-//                activityNumber = scanner.nextInt();
-//                scanner.nextLine();
                 repeatInput = true;
             } else {
                 System.out.println("Invalid activity number. Please try again.");
@@ -580,7 +556,7 @@ public class ActivityPlannerApp {
                 + "or enter 0 to proceed to the next step.");
         System.out.println("Enter an add-on name: ");
         String activityAddOnName = scanner.nextLine();
-        
+
         while (true) {
             //break if input is 0
             if (activityAddOnName.equals("0")) {
@@ -590,7 +566,7 @@ public class ActivityPlannerApp {
 
                 // If it exists, add the add-on to the activity
                 AddOn selectedAddOn = activity.getAddOnByName(activityAddOnName);
-                
+
                 if (activity.getAddOns().contains(selectedAddOn)) {
                     System.out.println(selectedAddOn.getName() + " add-on already exists "
                             + "in your list! \nPlease enter a valid add-on name or 0 to proceed:");
@@ -608,7 +584,7 @@ public class ActivityPlannerApp {
                 System.out.println("Invalid add-on name. Please try again \n"
                         + "or enter 0 to proceed to the next step.");
                 activityAddOnName = scanner.nextLine();
-                
+
             }
         }
     }
@@ -634,7 +610,7 @@ public class ActivityPlannerApp {
         System.out.print("Please select add-on(s) for your itinerary\n"
                 + "or enter 0 to proceed to the next step:");
         String itineraryAddOnName = scanner.nextLine();
-        
+
         while (true) {
             if (itineraryAddOnName.equals("0")) {
                 break;
@@ -669,7 +645,7 @@ public class ActivityPlannerApp {
     public void readItinerariesFromFile() {
         String filePath = "ItineraryDatabase.txt";
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            
+
             String line;
             while ((line = reader.readLine()) != null) {
                 Itinerary itinerary = parseItineraryFromString(line);
@@ -677,7 +653,7 @@ public class ActivityPlannerApp {
                     itineraries.add(itinerary);
                 }
             }
-            
+
             System.out.println("Itineraries have been successfully loaded from the file.");
         } catch (IOException e) {
             System.err.println("Error reading itineraries from the file: " + e.getMessage());
@@ -693,21 +669,23 @@ public class ActivityPlannerApp {
         }
         return false;
     }
-    
+
     protected Activity getActivityByCode(String activityCode) {
         for (Activity activity : activities) {
             if (activity.getCode().equalsIgnoreCase(activityCode)) {
-                //COPY CONSTRUCTOR NEEDS TO BE USED SO ACTIVITY ADDONS GET INITIATED (took me an hour to figure)
+                //COPY CONSTRUCTOR NEEDS TO BE USED SO ACTIVITY ADDONS GET INITIATED
                 Activity activityCopy = new Activity(activity);
                 return activityCopy;
             }
         }
-        return null; // Return null if the activity with the specified code is not found
+        // Return null if the activity with the specified code is not found
+        return null;
     }
 
     /**
      * Parses a string representation of an itinerary and creates an Itinerary
-     * object.
+     * object, adds itinerary add-ons to it and calls parseActivityFromString()
+     * to do the same for activities and the add-ons.
      *
      * @param itineraryString The string representation of an itinerary.
      * @return The Itinerary object created from the string, or null if parsing
@@ -727,31 +705,25 @@ public class ActivityPlannerApp {
             int totalActivities = Integer.parseInt(fields[4]);
             int attendeeCount = Integer.parseInt(fields[5]);
             String itineraryContent = fields[6];
-            // Extract activity details
-//            List<Activity> activities = new ArrayList<>();
-//            for (int i = 0; i < totalActivities; i++) {
-//                // Extract activity data from fields (adjust indices as needed)
-//                String itineraryContent = fields[5 + i];
-////                Activity activity = parseActivityFromString(itineraryContent);
-////                activities.add(activity);`
-//            }
-//            parseActivityFromString(itineraryContent)
 
             String[] itineraryAddOnSeparated;
             String[] itineraryAddOns;
-            if (itineraryContent.contains(";")) {//if the full information string contains ";" so it contains itinerary addons
-                itineraryAddOnSeparated = itineraryContent.split(";");//split the string into activities and its addons AND itinerary addons
-                //this is the list of all the itinerary addons
+            //if the full information string contains ";" so it contains itinerary addons
+            if (itineraryContent.contains(";")) {
+                //split the string into an array of two members containing activities & its addons and itinerary addons
+                itineraryAddOnSeparated = itineraryContent.split(";");
 
-                if (itineraryAddOnSeparated[1].contains(",")) {//if there are multiple itinerary addons... 
-                    itineraryAddOns = itineraryAddOnSeparated[1].split(",");//split itinerary addons from each other
+                //if there are multiple itinerary addons... 
+                if (itineraryAddOnSeparated[1].contains(",")) {
+                    //split itinerary addons from each other
+                    itineraryAddOns = itineraryAddOnSeparated[1].split(",");
                     for (String addOnCode : itineraryAddOns) {
                         if (itinerary.hasAddOnByCode(addOnCode)) {
                             AddOn addOn = itinerary.getAddOnByCode(addOnCode);
                             itinerary.addAddOn(addOn);
                         }
                     }
-                } else {//if one itinerary addon
+                } else {//if there's one itinerary addon 
                     String itineraryAddOnCode = itineraryAddOnSeparated[1];
                     if (itinerary.hasAddOnByCode(itineraryAddOnCode)) {
                         AddOn addOn = itinerary.getAddOnByCode(itineraryAddOnCode);
@@ -760,36 +732,15 @@ public class ActivityPlannerApp {
                 }
             } else {
                 itineraryAddOnSeparated = new String[]{itineraryContent};
-                //this case must be ignored because when there is no 
-//                itineraryAddOnSeparated[0] = itineraryContent;
-//                if (itineraryAddOnSeparated[0].contains(",")) {//if there are multiple itinerary addons... 
-//                    itineraryAddOns = itineraryAddOnSeparated[0].split(",");//split itinerary addons from each other
-//                    for (String addOnCode : itineraryAddOns) {
-//                        if (itinerary.hasAddOnByCode(addOnCode)) {
-//                            AddOn addOn = itinerary.getAddOnByCode(addOnCode);
-//                            itinerary.addAddOn(addOn);
-//                        }
-//                    }
-//                } else {//if one itinerary addon
-//                    String itineraryAddOnCode = itineraryAddOnSeparated[0];
-//                    if (itinerary.hasAddOnByCode(itineraryAddOnCode)) {
-//                        AddOn addOn = itinerary.getAddOnByCode(itineraryAddOnCode);
-//                        itinerary.addAddOn(addOn);
-//                    }
-//                }
             }
-//else is not needed as if ; is not present then there is no itinerary addon so the logic just gets skipped
 
+            //Encapsulated parse activity method
             parseActivityFromString(itinerary, itineraryAddOnSeparated);
 
-            //implement a for loop for itinerary addons (itineraryAddOns[])
-            // Create and return the Itinerary object
             itinerary.setId(reference);
             itinerary.setDate(date);
             itinerary.getAttendee().setName(attendeeName);
             itinerary.getAttendee().setMembers(attendeeCount);
-//            itinerary.setFinalCost(totalCost);
-//            itinerary.setActivities(activities);
             return itinerary;
         } catch (Exception e) {
             System.err.println("Error parsing itinerary string: " + e.getMessage());
@@ -799,25 +750,28 @@ public class ActivityPlannerApp {
 
     /**
      * Parses a string representation of an activity with the add-ons and add
-     * them to the itinerary.
+     * them to the itinerary by checking the conditions considering every
+     * pattern of itinerary code complex stored on the text file.
      *
-     * @param activityString The string representation of an activity.
-     * @return The Activity object created from the string, or null if parsing
-     * fails.
+     * I will not spend time on encapsulating this part as I cannot afford more
+     * time loss.
+     *
+     * @param itinerary The activity that is being worked on.
+     * @param itineraryAddOnSeparated Array of activity ID + add-on ID('s).
      */
     private void parseActivityFromString(Itinerary itinerary, String[] itineraryAddOnSeparated) {
         try {
             String[] ActivitiesAndAddons;
             // if there is more than one activity
-            if (itineraryAddOnSeparated[0].contains("&")) { 
+            if (itineraryAddOnSeparated[0].contains("&")) {
                 //split different activities keeping their addons
                 ActivitiesAndAddons = itineraryAddOnSeparated[0].split("&");
                 for (String ActivitiesAndAddon : ActivitiesAndAddons) {
                     //handle multiple activities and addons
-                    
+
                     String[] activityDetails;
                     //if there are activity addon(s)
-                    if (ActivitiesAndAddon.contains(":")) { 
+                    if (ActivitiesAndAddon.contains(":")) {
                         activityDetails = ActivitiesAndAddon.split(":");
                         //index 0 is the activity code//everything after index 1 (invlusive) are addons 
                         String activityCode = activityDetails[0];
@@ -836,18 +790,18 @@ public class ActivityPlannerApp {
                                     }
                                 }
                             }
-                        }else {
+                        } else {
                             String addOnCode = activityDetails[1];
                             if (hasActivityByCode(activityCode)) {
                                 Activity activity = getActivityByCode(activityCode);
                                 Activity activityCopy = new Activity(activity);
                                 itinerary.addActivity(activityCopy);
-                                
-                                    if (activityCopy.hasAddOnByCode(addOnCode)) {
-                                        AddOn addOn = activityCopy.getAddOnByCode(addOnCode);
-                                        activityCopy.addAddOn(addOn);
-                                    }
-                                
+
+                                if (activityCopy.hasAddOnByCode(addOnCode)) {
+                                    AddOn addOn = activityCopy.getAddOnByCode(addOnCode);
+                                    activityCopy.addAddOn(addOn);
+                                }
+
                             }
                         }
                     } else {//if there an activity with no addons in the itinerary
@@ -883,32 +837,32 @@ public class ActivityPlannerApp {
                 exist we will split at a : that'll exist as long as activity has addons*/
                 if (itineraryAddOnSeparated != null) {
                     //basically if the input string represents the activity has addons
-                    if (itineraryAddOnSeparated[0].contains(":")) { 
+                    if (itineraryAddOnSeparated[0].contains(":")) {
                         ActivitiesAndAddons = itineraryAddOnSeparated[0].split(":");
                         String activityCode = ActivitiesAndAddons[0];
                         if (hasActivityByCode(activityCode)) {
-                            addAvtivitiesByCode(itinerary, activityCode, 
+                            addAvtivitiesByCode(itinerary, activityCode,
                                     ActivitiesAndAddons);
                         } else {//if no activity addons
                             activityCode = itineraryAddOnSeparated[0];
                             if (hasActivityByCode(activityCode)) {
-                                addAvtivitiesByCode(itinerary, activityCode, 
+                                addAvtivitiesByCode(itinerary, activityCode,
                                         ActivitiesAndAddons);
                             }
                         }
                     }
                 } else {
                     //basically if the input string represents the activity has addons
-                    if (itineraryAddOnSeparated[0].contains(":")) { 
+                    if (itineraryAddOnSeparated[0].contains(":")) {
                         ActivitiesAndAddons = itineraryAddOnSeparated[0].split(":");
                         String activityCode = ActivitiesAndAddons[0];
                         if (hasActivityByCode(activityCode)) {
-                            addAvtivitiesByCode(itinerary, activityCode, 
+                            addAvtivitiesByCode(itinerary, activityCode,
                                     ActivitiesAndAddons);
                         } else {//if no activity addons
                             activityCode = itineraryAddOnSeparated[0];
                             if (hasActivityByCode(activityCode)) {
-                                addAvtivitiesByCode(itinerary, activityCode, 
+                                addAvtivitiesByCode(itinerary, activityCode,
                                         ActivitiesAndAddons);
                             }
                         }
@@ -916,21 +870,24 @@ public class ActivityPlannerApp {
                         System.out.println("How did you even end up here T-T");
                     }
                 }
-                
+
             }
         } catch (Exception e) {
             System.err.println("Error parsing activity string: " + e.getMessage());
         }
     }
-    
+
     /**
+     * Adds activities to itinerary and add-ons to activities.
+     *
      * Sub-method of parseActivityFromString() to encapsulate the codes that is
-     * suitable to do so
-     * @param itinerary
-     * @param activityCode
-     * @param ActivitiesAndAddons 
+     * suitable to do so.
+     *
+     * @param itinerary The itinerary instance that is being worked on
+     * @param activityCode The activity code that is going to be searched for
+     * @param ActivitiesAndAddons Array of activity codes and the add-ons.
      */
-    private void addAvtivitiesByCode(Itinerary itinerary, String activityCode, 
+    private void addAvtivitiesByCode(Itinerary itinerary, String activityCode,
             String[] ActivitiesAndAddons) {
         try {
             Activity activity = getActivityByCode(activityCode);
@@ -956,7 +913,7 @@ public class ActivityPlannerApp {
             System.err.println("Error parsing add-on string: " + e.getMessage());
         }
     }
-    
+
 }
 /*
 
