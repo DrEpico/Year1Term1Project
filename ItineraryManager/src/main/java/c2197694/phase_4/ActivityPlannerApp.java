@@ -798,8 +798,8 @@ public class ActivityPlannerApp {
     }
 
     /**
-     * Parses a string representation of an activity and creates an Activity
-     * object.
+     * Parses a string representation of an activity with the add-ons and add
+     * them to the itinerary.
      *
      * @param activityString The string representation of an activity.
      * @return The Activity object created from the string, or null if parsing
@@ -808,26 +808,31 @@ public class ActivityPlannerApp {
     private void parseActivityFromString(Itinerary itinerary, String[] itineraryAddOnSeparated) {
         try {
             String[] ActivitiesAndAddons;
-            if (itineraryAddOnSeparated[0].contains("&")) { // if there is more than one activity
-                ActivitiesAndAddons = itineraryAddOnSeparated[0].split("&");//split different activities keeping their addons
+            // if there is more than one activity
+            if (itineraryAddOnSeparated[0].contains("&")) { 
+                //split different activities keeping their addons
+                ActivitiesAndAddons = itineraryAddOnSeparated[0].split("&");
                 for (String ActivitiesAndAddon : ActivitiesAndAddons) {
                     //handle multiple activities and addons
                     
                     String[] activityDetails;
-                    if (ActivitiesAndAddon.contains(":")) {//if there are activity addon(s) 
+                    //if there are activity addon(s)
+                    if (ActivitiesAndAddon.contains(":")) { 
                         activityDetails = ActivitiesAndAddon.split(":");
-                        String activityCode = activityDetails[0];//index 0 is the activity code//everything after index 1 (invlusive) are addons 
+                        //index 0 is the activity code//everything after index 1 (invlusive) are addons 
+                        String activityCode = activityDetails[0];
                         String[] ActivityaddOnCodes;
                         if (activityDetails[1].contains(",")) {
-                            ActivityaddOnCodes = activityDetails[1].split(",");//split addon codes from each other
+                            //split addon codes from each other
+                            ActivityaddOnCodes = activityDetails[1].split(",");
                             if (hasActivityByCode(activityCode)) {
                                 Activity activity = getActivityByCode(activityCode);
                                 Activity activityCopy = new Activity(activity);
                                 itinerary.addActivity(activityCopy);
                                 for (String addOnCode : ActivityaddOnCodes) {
-                                    if (activity.hasAddOnByCode(addOnCode)) {
-                                        AddOn addOn = activity.getAddOnByCode(addOnCode);
-                                        activity.addAddOn(addOn);
+                                    if (activityCopy.hasAddOnByCode(addOnCode)) {
+                                        AddOn addOn = activityCopy.getAddOnByCode(addOnCode);
+                                        activityCopy.addAddOn(addOn);
                                     }
                                 }
                             }
@@ -838,64 +843,77 @@ public class ActivityPlannerApp {
                                 Activity activityCopy = new Activity(activity);
                                 itinerary.addActivity(activityCopy);
                                 
-                                    if (activity.hasAddOnByCode(addOnCode)) {
-                                        AddOn addOn = activity.getAddOnByCode(addOnCode);
-                                        activity.addAddOn(addOn);
+                                    if (activityCopy.hasAddOnByCode(addOnCode)) {
+                                        AddOn addOn = activityCopy.getAddOnByCode(addOnCode);
+                                        activityCopy.addAddOn(addOn);
                                     }
                                 
                             }
                         }
                     } else {//if there an activity with no addons in the itinerary
-                        String activityCode = ActivitiesAndAddon;//index 0 is the activity code//everything after index 1 (invlusive) are addons 
+                        //index 0 is the activity code//everything after index 1 (invlusive) are addons 
+                        String activityCode = ActivitiesAndAddon;
                         String[] ActivityaddOnCodes;
                         if (ActivitiesAndAddon.contains(",")) {//if there is multiple
-                            ActivityaddOnCodes = ActivitiesAndAddon.split(",");//split addon codes from each other
+                            //split addon codes from each other
+                            ActivityaddOnCodes = ActivitiesAndAddon.split(",");
                             if (hasActivityByCode(activityCode)) {
                                 Activity activity = getActivityByCode(activityCode);
-                                itinerary.addActivity(activity);
+                                Activity activityCopy = new Activity(activity);
+                                itinerary.addActivity(activityCopy);
                                 for (String addOnCode : ActivityaddOnCodes) {
-                                    if (activity.hasAddOnByCode(addOnCode)) {
-                                        AddOn addOn = activity.getAddOnByCode(addOnCode);
-                                        activity.addAddOn(addOn);
+                                    if (activityCopy.hasAddOnByCode(addOnCode)) {
+                                        AddOn addOn = activityCopy.getAddOnByCode(addOnCode);
+                                        activityCopy.addAddOn(addOn);
                                     }
                                 }
                             }
                         } else {
                             if (hasActivityByCode(ActivitiesAndAddon)) {
-                                Activity activity = getActivityByCode(ActivitiesAndAddon);
-                                itinerary.addActivity(activity);
+                                Activity activity = getActivityByCode(
+                                        ActivitiesAndAddon);
+                                Activity activityCopy = new Activity(activity);
+                                itinerary.addActivity(activityCopy);
                             }
                         }
                     }
                 }
-            } else {//else there is only one activity so instead of splitting at a & that doesnt exist we will split at a : that'll exist as long as activity has addons
+            } else {
+                /*there is only one activity so instead of splitting at a & that doesnt 
+                exist we will split at a : that'll exist as long as activity has addons*/
                 if (itineraryAddOnSeparated != null) {
-                    if (itineraryAddOnSeparated[0].contains(":")) { //basically if the input string represents the activity has addons
+                    //basically if the input string represents the activity has addons
+                    if (itineraryAddOnSeparated[0].contains(":")) { 
                         ActivitiesAndAddons = itineraryAddOnSeparated[0].split(":");
                         String activityCode = ActivitiesAndAddons[0];
                         if (hasActivityByCode(activityCode)) {
-                            addAvtivitiesByCode(itinerary, activityCode, ActivitiesAndAddons);
+                            addAvtivitiesByCode(itinerary, activityCode, 
+                                    ActivitiesAndAddons);
                         } else {//if no activity addons
                             activityCode = itineraryAddOnSeparated[0];
                             if (hasActivityByCode(activityCode)) {
-                                addAvtivitiesByCode(itinerary, activityCode, ActivitiesAndAddons);
+                                addAvtivitiesByCode(itinerary, activityCode, 
+                                        ActivitiesAndAddons);
                             }
                         }
                     }
                 } else {
-                    if (itineraryAddOnSeparated[0].contains(":")) { //basically if the input string represents the activity has addons
+                    //basically if the input string represents the activity has addons
+                    if (itineraryAddOnSeparated[0].contains(":")) { 
                         ActivitiesAndAddons = itineraryAddOnSeparated[0].split(":");
                         String activityCode = ActivitiesAndAddons[0];
                         if (hasActivityByCode(activityCode)) {
-                            addAvtivitiesByCode(itinerary, activityCode, ActivitiesAndAddons);
+                            addAvtivitiesByCode(itinerary, activityCode, 
+                                    ActivitiesAndAddons);
                         } else {//if no activity addons
                             activityCode = itineraryAddOnSeparated[0];
                             if (hasActivityByCode(activityCode)) {
-                                addAvtivitiesByCode(itinerary, activityCode, ActivitiesAndAddons);
+                                addAvtivitiesByCode(itinerary, activityCode, 
+                                        ActivitiesAndAddons);
                             }
                         }
                     } else {
-                        System.out.println("test3");
+                        System.out.println("How did you even end up here T-T");
                     }
                 }
                 
@@ -905,23 +923,33 @@ public class ActivityPlannerApp {
         }
     }
     
-    private void addAvtivitiesByCode(Itinerary itinerary, String activityCode, String[] ActivitiesAndAddons) {
+    /**
+     * Sub-method of parseActivityFromString() to encapsulate the codes that is
+     * suitable to do so
+     * @param itinerary
+     * @param activityCode
+     * @param ActivitiesAndAddons 
+     */
+    private void addAvtivitiesByCode(Itinerary itinerary, String activityCode, 
+            String[] ActivitiesAndAddons) {
         try {
             Activity activity = getActivityByCode(activityCode);
-            itinerary.addActivity(activity);
-            if (ActivitiesAndAddons[1].contains(",")) {//if more than one activity addon exists
+            Activity activityCopy = new Activity(activity);
+            itinerary.addActivity(activityCopy);
+            //if more than one activity addon exists
+            if (ActivitiesAndAddons[1].contains(",")) {
                 String[] addOnCodes = ActivitiesAndAddons[1].split(",");
                 for (String addOnCode : addOnCodes) {
-                    if (activity.hasAddOnByCode(addOnCode)) {
-                        AddOn addOn = activity.getAddOnByCode(addOnCode);
-                        activity.addAddOn(addOn);
+                    if (activityCopy.hasAddOnByCode(addOnCode)) {
+                        AddOn addOn = activityCopy.getAddOnByCode(addOnCode);
+                        activityCopy.addAddOn(addOn);
                     }
                 }
             } else { //if one activity addon exits
                 String addOnCode = ActivitiesAndAddons[1];
-                if (activity.hasAddOnByCode(addOnCode)) {
-                    AddOn addOn = activity.getAddOnByCode(addOnCode);
-                    activity.addAddOn(addOn);
+                if (activityCopy.hasAddOnByCode(addOnCode)) {
+                    AddOn addOn = activityCopy.getAddOnByCode(addOnCode);
+                    activityCopy.addAddOn(addOn);
                 }
             }
         } catch (Exception e) {
@@ -931,20 +959,6 @@ public class ActivityPlannerApp {
     
 }
 /*
-OF196M	6/1/2024	gawg awgawg	360.0	1	3	SAS-01:INS&HIK-01:TRA;ACC	
-JO111Q	6/1/2024	Ali Dadashipour	522.0	2	3	SAS-01:TRA,PHT&HIK-01:TRA;LUN,TEA	
-RY886O	6/1/2024	awgwag awgawg	316.0	2	2	SAS-01:INS&HIK-01:TRA	
-NM078P	6/1/2024	gawgwa gawgaw	345.8	3	2	SAS-01:TRA,PHT&HIK-01:INS;LUN,TEA	
-XX525U	6/1/2024	gwag wagawgaw	270.0	2	2	SAS-01:TRA&CKR-01:TRA;LUN   
-
-KW037R	8/1/2024	Ali Dadashipour	36.0	1	2	PBR-01:INS	
-VO955E	8/1/2024	Emily Johnson	144.0	1	3	HIK-01:INS;TEA	
-HL799I	8/1/2024	Benjamin Martinez	49.0	1	1	CKR-01:TRA,PHT;LUN	
-VG817L	8/1/2024	Olivia Davis	405.0	1	3	SAS-01:INS,TRA;TEA,ACC	
-YJ278B	8/1/2024	Ethan Thompson	200.0	2	2	&HIK-01:INS,TRA;TEA,ACC,LUN	
-ML418X	8/1/2024	Ava Rodriguez	280.0	2	2	&;LUN,TEA	
-FG551X	8/1/2024	Liam Wilson	155.8	3	2	CKR-01:INS,TRA,PHT&&	
-CJ302O	8/1/2024	Sophia Garcia	480.0	2	4	&	
 
         BEST TEST VERSION
 MJ764K	8/1/2024	Ali Dadashipour	18.0	1	1	PBR-01:INS	
