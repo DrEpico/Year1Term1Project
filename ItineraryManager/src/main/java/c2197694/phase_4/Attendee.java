@@ -33,8 +33,7 @@ public class Attendee {
         this.members = members;
     }
     
-    public Attendee(){
-        
+    public Attendee(){  
     }
     
     /**

@@ -150,6 +150,10 @@ public class ActivityPlannerApp {
         return activities;
     }
 
+    protected List<Itinerary> getItineraries() {
+        return itineraries;
+    }
+
     /**
      * Writes the given list of itineraries to a text file in the specified
      * format.
@@ -395,42 +399,45 @@ public class ActivityPlannerApp {
     public static void main(String[] args) {
         // Creates an instance of ActivityPlannerApp
         ActivityPlannerApp plannerApp = new ActivityPlannerApp();
-        Scanner scanner = new Scanner(System.in);
-
-        OUTER:
-        while (true) {
-            System.out.println("1. Display All Activities");
-            System.out.println("2. Create Itinerary");
-            System.out.println("3. Read database and display stored itineraries");
-            System.out.println("4. Exit");
-            System.out.println("Enter your choice: ");
-
-            int choice = protectedNextInt(scanner);
-
-            switch (choice) {
-                case 1:
-                    plannerApp.displayActivities();
-                    break;
-                case 2:
-                    createItinerary(plannerApp, scanner);
-                    break OUTER;
-                case 3:
-                    plannerApp.readItinerariesFromFile();
-
-                    System.out.println("Lead Attendee\tTotal Attendees\t"
-                            + "Total Activities\tTotal Cost");
-                    for (Itinerary itinerary : plannerApp.itineraries) {
-                        itinerary.printItinerary();
-                    }
-                case 4:
-                    System.out.println("Exiting...");
-                    scanner.close();
-                    System.exit(0);
-                default:
-                    System.out.println("Invalid choice. Please try again.");
-                    break;
-            }
-        }
+        plannerApp.readItinerariesFromFile();
+        GUIApp gui = new GUIApp(plannerApp.itineraries);
+//        Scanner scanner = new Scanner(System.in);
+//        
+//        OUTER:
+//        while (true) {
+//            System.out.println("1. Display All Activities");
+//            System.out.println("2. Create Itinerary");
+//            System.out.println("3. Read database and display stored itineraries");
+//            System.out.println("4. Exit");
+//            System.out.println("Enter your choice: ");
+//
+//            int choice = protectedNextInt(scanner);
+//
+//            switch (choice) {
+//                case 1:
+//                    plannerApp.displayActivities();
+//                    break;
+//                case 2:
+//                    createItinerary(plannerApp, scanner);
+//                    break OUTER;
+//                case 3:
+//                    plannerApp.readItinerariesFromFile();
+//
+//                    System.out.println("Lead Attendee\tTotal Attendees\t"
+//                            + "Total Activities\tTotal Cost");
+//                    for (Itinerary itinerary : plannerApp.itineraries) {
+//                        itinerary.printItinerary();
+//                    }
+//                case 4:
+//                    System.out.println("Exiting...");
+//                    scanner.close();
+//                    System.exit(0);
+//                default:
+//                    System.out.println("Invalid choice. Please try again.");
+//                    break;
+//            }
+//        }
+        
     }
 
     /**
@@ -761,12 +768,12 @@ public class ActivityPlannerApp {
      */
     private void parseActivityFromString(Itinerary itinerary, String[] itineraryAddOnSeparated) {
         try {
-            String[] ActivitiesAndAddons;
+            String[] activitiesAndAddons;
             // if there is more than one activity
             if (itineraryAddOnSeparated[0].contains("&")) {
                 //split different activities keeping their addons
-                ActivitiesAndAddons = itineraryAddOnSeparated[0].split("&");
-                for (String ActivitiesAndAddon : ActivitiesAndAddons) {
+                activitiesAndAddons = itineraryAddOnSeparated[0].split("&");
+                for (String ActivitiesAndAddon : activitiesAndAddons) {
                     //handle multiple activities and addons
 
                     String[] activityDetails;
@@ -838,32 +845,32 @@ public class ActivityPlannerApp {
                 if (itineraryAddOnSeparated != null) {
                     //basically if the input string represents the activity has addons
                     if (itineraryAddOnSeparated[0].contains(":")) {
-                        ActivitiesAndAddons = itineraryAddOnSeparated[0].split(":");
-                        String activityCode = ActivitiesAndAddons[0];
+                        activitiesAndAddons = itineraryAddOnSeparated[0].split(":");
+                        String activityCode = activitiesAndAddons[0];
                         if (hasActivityByCode(activityCode)) {
                             addAvtivitiesByCode(itinerary, activityCode,
-                                    ActivitiesAndAddons);
+                                    activitiesAndAddons);
                         } else {//if no activity addons
                             activityCode = itineraryAddOnSeparated[0];
                             if (hasActivityByCode(activityCode)) {
                                 addAvtivitiesByCode(itinerary, activityCode,
-                                        ActivitiesAndAddons);
+                                        activitiesAndAddons);
                             }
                         }
                     }
                 } else {
                     //basically if the input string represents the activity has addons
                     if (itineraryAddOnSeparated[0].contains(":")) {
-                        ActivitiesAndAddons = itineraryAddOnSeparated[0].split(":");
-                        String activityCode = ActivitiesAndAddons[0];
+                        activitiesAndAddons = itineraryAddOnSeparated[0].split(":");
+                        String activityCode = activitiesAndAddons[0];
                         if (hasActivityByCode(activityCode)) {
                             addAvtivitiesByCode(itinerary, activityCode,
-                                    ActivitiesAndAddons);
+                                    activitiesAndAddons);
                         } else {//if no activity addons
                             activityCode = itineraryAddOnSeparated[0];
                             if (hasActivityByCode(activityCode)) {
                                 addAvtivitiesByCode(itinerary, activityCode,
-                                        ActivitiesAndAddons);
+                                        activitiesAndAddons);
                             }
                         }
                     } else {

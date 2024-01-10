@@ -52,7 +52,7 @@ public class Itinerary {
     private final int day = now.getDayOfMonth();
     private final int month = now.getMonthValue();
     private final int year = now.getYear();
-    
+
     /**
      * Preset add-ons associated with itinerary.
      *
@@ -124,8 +124,8 @@ public class Itinerary {
         // Concatenate the parts to form the itinerary reference
         return randomLetters + randomDigits + randomLastLetter;
     }
-    
-    public final String generateDate(){
+
+    public final String generateDate() {
         String dayString = String.valueOf(this.day);
         String monthString = String.valueOf(this.month);
         String yearString = String.valueOf(this.year);
@@ -142,11 +142,10 @@ public class Itinerary {
     protected String getId() {
         return id;
     }
-    
-    protected String getDate(){
+
+    protected String getDate() {
         return date;
     }
-    
 
     /**
      * Simple getter method.
@@ -206,21 +205,22 @@ public class Itinerary {
     protected void setAttendee(Attendee attendee) {
         this.attendee = attendee;
     }
-    
+
     /**
      * Sets the lead attendee for itinerary.
      *
      * @param id The ID to be set.
      */
-    protected void setId(String id){
+    protected void setId(String id) {
         this.id = id;
     }
-    
+
     /**
      * Sets date for itinerary instance.
+     *
      * @param date The date to be set
      */
-    protected void setDate(String date){
+    protected void setDate(String date) {
         this.date = date;
     }
 
@@ -255,7 +255,7 @@ public class Itinerary {
         }
         return false;
     }
-    
+
     protected boolean hasAddOnByCode(String addOnCode) {
         for (AddOn addOn : displayAddOns) {
             if (addOn.getCode().equalsIgnoreCase(addOnCode)) {
@@ -285,7 +285,7 @@ public class Itinerary {
         }
         return null; // Return null if the add-on with the specified name is not found
     }
-    
+
     protected AddOn getAddOnByCode(String addOnCode) {
         for (AddOn addOn : displayAddOns) {
             if (addOn.getCode().equalsIgnoreCase(addOnCode)) {
@@ -434,14 +434,14 @@ public class Itinerary {
     }
 
     /**
-     * Calculates the discount value but in base format for further
+     * Determines the discount value but in base format for further
      * calculations. This is due to different methods requiring different
      * formats and this method is a capsulation that can be used in different
      * ways.
      *
      * @return Base discount value.
      */
-    private int calculateDiscountPercentage() {
+    private int getDiscountMultiplier() {
         int attendeeDiscount = 0;
 
         if (attendee.getMembers() >= 10 && attendee.getMembers() < 20) {
@@ -477,7 +477,7 @@ public class Itinerary {
      */
     private double calculateDiscountInPounds() {
         double totalCost = calculateCost();
-        int discountRate = calculateDiscountPercentage();
+        int discountRate = getDiscountMultiplier();
         // Calculate the discount amount
         double discountPercentage = (100 - (double) discountRate) / 100.0;
         // Subtract the discount amount from the total cost
@@ -498,8 +498,8 @@ public class Itinerary {
         finalCost = (finalCost / 100) - discountAmount;
         return finalCost;
     }
-    
-    public double getFinalCost(){
+
+    public double getFinalCost() {
         return applyDiscount();
     }
 
@@ -509,7 +509,7 @@ public class Itinerary {
      *
      * @return The formatted string.
      */
-    private String getAttendeeInitialSurname() {
+    public String getAttendeeInitialSurname() {
         String fullName = attendee.getName();
         // Split the full name into first name and surname
         String[] fullNameArray = fullName.split(" ");
@@ -521,8 +521,8 @@ public class Itinerary {
         String initialSurname = initial.concat(" " + surname);
         return initialSurname;
     }
-    
-    public Attendee getAttendee(){
+
+    public Attendee getAttendee() {
         return attendee;
     }
 
@@ -703,27 +703,27 @@ public class Itinerary {
         double totalDiscount = calculateDiscountInPounds();
         // Format the total discount to display up to 1 digit after the decimal point
         String formattedTotalDiscount = String.format("%.1f", totalDiscount);
-        System.out.println("| " + (100 - calculateDiscountPercentage()) + "% Discount"
+        System.out.println("| " + (100 - getDiscountMultiplier()) + "% Discount"
                 + "\t\t\t\tTotal discount:\t£" + formattedTotalDiscount + "\t|");
         System.out.println("+===============================================================+");
     }
-    
+
     /**
-     * Prints itineraries initiated through option 3 of the command line UI (read
-     * from the text file).
+     * Prints itineraries initiated through option 3 of the command line UI
+     * (read from the text file).
      */
-    public void printItinerary(){
+    public void printItinerary() {
         int activitiesSize = activities.size();
         System.out.println(attendee.getName() + "\t" + attendee.getMembers() + "\t\t" + activitiesSize + "\t\t\t" + applyDiscount());
-        for(Activity activity : activities){
+        for (Activity activity : activities) {
             System.out.println(activity.getTitle());
-            for(AddOn addOn : activity.getAddOns()){
+            for (AddOn addOn : activity.getAddOns()) {
                 System.out.println(addOn.getName());
             }
         }
-        for(AddOn addOn : addOns){
+        for (AddOn addOn : addOns) {
             System.out.println(addOn.getName());
         }
-        
+
     }
 }
