@@ -83,7 +83,7 @@ public class Itinerary {
      *
      * @return A random itinerary reference.
      */
-    private final String generateId() {
+    private String generateId() {
         // Generate two random letters
         String randomLetters = generateRandomString(LETTERS, 2);
 
@@ -235,20 +235,20 @@ public class Itinerary {
             totalCost += addOn.getCost();
         }
 
-        int totalDiscount = calculateDiscount(); 
+        int totalDiscount = getDiscountMultiplier(); 
         totalCost = (totalCost * totalDiscount) / 100;
         return totalCost;
     }
 
     /**
-     * Calculates the discount value but in base format for further
+     * Determines the discount value but in base format for further
      * calculations. This is due to different methods requiring different
      * formats and this method is a capsulation that can be used in different
      * ways.
      *
      * @return Base discount value.
      */
-    private int calculateDiscount() {
+    private int getDiscountMultiplier() {
         //splitted the discount calculatin logic from total cost calculation
         int attendeeDiscount = 0;
         
@@ -297,6 +297,7 @@ public class Itinerary {
      * 
      * @return add-on object
      */
+    
     protected AddOn getAccommodationAddOn(){
         return accommodation;
     }
