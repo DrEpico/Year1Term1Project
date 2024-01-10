@@ -388,14 +388,17 @@ public class ActivityPlannerApp {
      * @param scanner The Scanner object to read user input from.
      * @return
      */
-    private static int protectedNextInt(Scanner scanner) {
+    private static int protectedNextInt(Scanner scanner){
         int numbers = 0;
         boolean isValidInput = false;
-        while (!isValidInput) {
+        while (!isValidInput || numbers < 0) {
             try {
                 numbers = scanner.nextInt();
                 scanner.nextLine();
-                isValidInput = true; // Break the loop if input is successful
+                isValidInput = true; // Break the loop if input is acceptable
+                if(numbers < 0){
+                    System.out.println("Please enter a valid value");
+                }
             } catch (InputMismatchException e) {
                 System.out.println("Please enter a valid integer.");
                 scanner.next();
