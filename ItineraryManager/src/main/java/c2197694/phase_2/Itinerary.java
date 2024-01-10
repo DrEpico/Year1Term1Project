@@ -60,8 +60,8 @@ public class Itinerary {
     private final AddOn accommodation = new AddOn("Accommodation", 1700, "itinerary");
     private final AddOn teaBreaks = new AddOn("Coffee/Tea breaks", 500, "itinerary");
     private final AddOn lunch = new AddOn("Lunch", 1700, "itinerary");
-    private final AddOn nightEntertainment = new AddOn("Night Entertainment Package", 1900, "itinerary");
-    private final AddOn explorerJournal = new AddOn("Explorer's Journal Kit", 800, "itinerary");
+    private final AddOn nightEntertainment = new AddOn("Night Entertainment", 1800, "itinerary");
+    private final AddOn explorerJournal = new AddOn("Journal Kit", 400, "itinerary");
 
     private final Scanner scanner = new Scanner(System.in);
 
@@ -159,8 +159,32 @@ public class Itinerary {
         if (!activities.contains(activity)) {
             activities.add(activity);
         } else {
-            System.out.println(activity.getTitle() + " already exists in your list of activities!");
+            System.out.println(activity.getTitle() + 
+                    " already exists in your list of activities!");
         }
+    }
+    
+    /**
+     * Checked if the selected activity already exists in the array list of user
+     * selected activities or not. It has to be done by name as *copies* of activities
+     * can't be equal.
+     * 
+     * @param   selectedActivity The activity to be checked.
+     * @return  True if it is a duplication and false if it is acceptable.
+     */
+    protected boolean hasActivityByName(Activity selectedActivity){
+        //false by default so if activities were empty the selected one will be added
+        boolean hasActivity = false;
+        for(Activity existingActivity : activities){
+            if(existingActivity.getTitle().equalsIgnoreCase(selectedActivity.getTitle())){
+                System.out.println(selectedActivity.getTitle() + 
+                        " already exists in your list of activities!");
+                hasActivity = true;
+            } else {
+                hasActivity = false;
+            }
+        }
+        return hasActivity;
     }
 
     /**
@@ -172,7 +196,8 @@ public class Itinerary {
         if (!addOns.contains(addOn)) {
             addOns.add(addOn);
         } else {
-            System.out.println(addOn.getName() + " already exists in list of itinerary add-ons!");
+            System.out.println(addOn.getName() + 
+                    " already exists in list of itinerary add-ons!");
         }
     }
 

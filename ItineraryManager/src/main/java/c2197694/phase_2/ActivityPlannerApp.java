@@ -450,6 +450,7 @@ public class ActivityPlannerApp {
         }
     }
     
+    
     /**
      * activityAddonManager is a sub-method to activityManager. 
      * 
