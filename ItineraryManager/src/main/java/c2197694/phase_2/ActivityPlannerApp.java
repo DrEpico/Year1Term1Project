@@ -154,7 +154,6 @@ public class ActivityPlannerApp {
 
             // Check if there are exactly two parts (first name and surname)
             if (nameParts.length == 2) {
-                String firstName = nameParts[0];//this line is required
                 String surname = nameParts[1];
                 if (surname.length() > 11) {
                     System.out.println("Invalid input. Surname must be less than 11 characters long.\n"
@@ -170,29 +169,6 @@ public class ActivityPlannerApp {
             }
         }
     }
-
-//    /**
-//     * Validates user input for attendee count for mismatch exception to prevent
-//     * the program from crashing when user enters letters in nextInt().
-//     *
-//     * @param scanner The Scanner object to read user input from.
-//     * @return The valid integer entered by the user.
-//     */
-//    public static int attendeeCountValidation(Scanner scanner) {
-//        int numbers = 0;
-//        boolean isValidInput = false;
-//        while (!isValidInput) {
-//            try {
-//                numbers = scanner.nextInt();
-//                scanner.nextLine();
-//                isValidInput = true; // Break the loop if input is successful
-//            } catch (InputMismatchException e) {
-//                System.out.println("Please enter a valid integer.");
-//                scanner.next();
-//            }
-//        }
-//        return numbers;
-//    }
 
     /**
      * Prompts the user to enter a valid email address using a while loop.
@@ -274,11 +250,14 @@ public class ActivityPlannerApp {
     private static int protectedNextInt(Scanner scanner){
         int numbers = 0;
         boolean isValidInput = false;
-        while (!isValidInput) {
+        while (!isValidInput || numbers < 0) {
             try {
                 numbers = scanner.nextInt();
                 scanner.nextLine();
-                isValidInput = true; // Break the loop if input is successful
+                isValidInput = true; // Break the loop if input is acceptable
+                if(numbers < 0){
+                    System.out.println("Please enter a valid value");
+                }
             } catch (InputMismatchException e) {
                 System.out.println("Please enter a valid integer.");
                 scanner.next();
@@ -358,7 +337,16 @@ public class ActivityPlannerApp {
         boolean hasInsurance = validateInsurance(scanner);
 
         System.out.println("Enter the number of attendees: ");
-        int numbers = protectedNextInt(scanner);
+        int numbers = 0;
+        while(true){
+            numbers = protectedNextInt(scanner);
+            if(numbers >= 100){
+                System.out.println("Sorry! We can only offer you to add up to 99 attendees for one itinerary.");
+                System.out.println("Please enter the number of attendees again: ");
+            } else {
+                break;
+            }
+        }
         System.out.println();
 
         Attendee attendee = new Attendee(attendeeName, attendeeEmail,
