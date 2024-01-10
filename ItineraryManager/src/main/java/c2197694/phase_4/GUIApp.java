@@ -8,17 +8,33 @@ import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 /**
- *
- * @author epico
+ * GUIApp class represents the main application window for seeing all the 
+ * itineraries in a list after reading them from the text file.
+ * 
+ * It displays a table of itineraries and allows users to view details by clicking on a row.
+ * 
+ * @author C2197694
  */
 public class GUIApp extends JFrame {
-
+    
+    /**
+     * List of itineraries to be displayed in the application.
+     */
     List<Itinerary> itineraries;
-
+    
+    /**
+     * Constructs a GUIApp with the given list of itineraries.
+     *
+     * @param itineraries List of itineraries to be displayed.
+     */
     public GUIApp(List<Itinerary> itineraries) {
         this.itineraries = itineraries;
 
@@ -30,9 +46,13 @@ public class GUIApp extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
     }
-
+    
+    /**
+     * Initializes the components of the GUI, including the table of itineraries.
+     */
     private void initComponents() {
-        String[] columns = {"Itinerary ref", "Lead Attendee", "Total Attendees", "Total Activities", "Total Cost"};
+        String[] columns = {"Itinerary ref", "Lead Attendee", "Total Attendees", 
+                "Total Activities", "Total Cost"};
 
         DefaultTableModel itineraryTableModel = new DefaultTableModel(columns, 0) {
             @Override
@@ -79,7 +99,12 @@ public class GUIApp extends JFrame {
         add(panel);
         setResizable(false);
     }
-
+    
+    /**
+     * Opens a new window displaying details of the selected itinerary.
+     *
+     * @param itinerary The selected itinerary.
+     */
     private void openDetailsWindow(Itinerary itinerary) {
         // Implement the logic to open a new window with details of the selected itinerary
         JFrame detailsFrame = new JFrame("Exciting Activities Ltd - Itinerary Screen");
@@ -107,7 +132,14 @@ public class GUIApp extends JFrame {
         detailsFrame.setResizable(false);
         detailsFrame.setVisible(true);
     }
-
+    
+    /**
+     * Displays the table of itinerary add-ons in a details window.
+     *
+     * @param itinerary    The itinerary for which to display add-ons.
+     * @param detailsPanel The panel in which to display the add-ons table.
+     * @param detailsFrame The frame for the details window.
+     */
     public void displayItineraryAddOnsTable(Itinerary itinerary, JPanel detailsPanel, JFrame detailsFrame) {
         String[] listTitle = {"Itinerary Add-on(s)"};
         DefaultTableModel addonsTableModel = new DefaultTableModel(listTitle, 0) {
@@ -146,7 +178,14 @@ public class GUIApp extends JFrame {
         detailsPanel.add(scrollPane);  // Add the scrollPane directly to detailsPanel
 
     }
-
+    
+    /**
+     * Displays the table of activities in a details window.
+     *
+     * @param itinerary    The itinerary for which to display activities.
+     * @param detailsPanel The panel in which to display the activities table.
+     * @param detailsFrame The frame for the details window.
+     */
     public void displayaActivityTable(Itinerary itinerary, JPanel detailsPanel, JFrame detailsFrame) {
         String[] listTitle = {"Activities", "Add-ons"};
         DefaultTableModel activitiesTableModel = new DefaultTableModel(listTitle, 0) {
