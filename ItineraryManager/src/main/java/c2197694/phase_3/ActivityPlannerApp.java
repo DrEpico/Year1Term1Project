@@ -264,7 +264,7 @@ public class ActivityPlannerApp {
      * @param fullName The full-name to be validated.
      * @param scanner The Scanner object in work.
      */
-    private static void nameInputValidation(String fullName, Scanner scanner) {
+    private static String nameInputValidation(String fullName, Scanner scanner) {
         while (true) {
             // Split the full name into parts using the space character
             String[] nameParts = fullName.split(" ");
@@ -286,6 +286,7 @@ public class ActivityPlannerApp {
                 fullName = scanner.nextLine();
             }
         }
+        return fullName;
     }
 
 //    /**
@@ -464,7 +465,7 @@ public class ActivityPlannerApp {
         //Gather attendee information (then sell it to third party companies)
         System.out.println("Enter your full name (First Surname): ");
         String attendeeName = scanner.nextLine();
-        nameInputValidation(attendeeName, scanner);
+        attendeeName = nameInputValidation(attendeeName, scanner);
         System.out.println();
 
         System.out.println("Enter attendee email: ");

@@ -394,14 +394,14 @@ public class Itinerary {
     }
 
     /**
-     * Calculates the discount value but in base format for further
+     * Determines the discount value but in base format for further
      * calculations. This is due to different methods requiring different
      * formats and this method is a capsulation that can be used in different
      * ways.
      *
      * @return Base discount value.
      */
-    private int calculateDiscountPercentage() {
+    private int getDiscountMultiplier() {
         int attendeeDiscount = 0;
 
         if (attendee.getMembers() >= 10 && attendee.getMembers() < 20) {
@@ -437,7 +437,7 @@ public class Itinerary {
      */
     private double calculateDiscountInPounds() {
         double totalCost = calculateCost();
-        int discountRate = calculateDiscountPercentage();
+        int discountRate = getDiscountMultiplier();
         // Calculate the discount amount
         double discountPercentage = (100 - (double) discountRate) / 100.0;
         // Subtract the discount amount from the total cost
@@ -663,7 +663,7 @@ public class Itinerary {
         double totalDiscount = calculateDiscountInPounds();
         // Format the total discount to display up to 1 digit after the decimal point
         String formattedTotalDiscount = String.format("%.1f", totalDiscount);
-        System.out.println("| " + (100 - calculateDiscountPercentage()) + "% Discount"
+        System.out.println("| " + (100 - getDiscountMultiplier()) + "% Discount"
                 + "\t\t\t\tTotal discount:\t£" + formattedTotalDiscount + "\t|");
         System.out.println("+===============================================================+");
     }
