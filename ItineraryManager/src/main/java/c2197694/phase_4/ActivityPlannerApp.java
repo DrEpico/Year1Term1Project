@@ -472,7 +472,16 @@ public class ActivityPlannerApp {
         boolean hasInsurance = validateInsurance(scanner);
 
         System.out.println("Enter the number of attendees: ");
-        int numbers = protectedNextInt(scanner);
+        int numbers = 0;
+        while(true){
+            numbers = protectedNextInt(scanner);
+            if(numbers >= 100){
+                System.out.println("Sorry! We can only offer you to add up to 99 attendees for one itinerary.\n"
+                        + "Please enter the number of attendees again: ");
+            } else {
+                break;
+            }
+        }
         System.out.println();
 
         Attendee attendee = new Attendee(attendeeName, attendeeEmail,
