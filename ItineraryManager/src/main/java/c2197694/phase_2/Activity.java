@@ -291,11 +291,11 @@ public class Activity{
     }
     
     protected AddOn getTravelAddOn(){
-        return insurance;
+        return travel;
     }
     
     protected AddOn getPhotographyAddOn(){
-        return insurance;
+        return photography;
     }
     
     /**

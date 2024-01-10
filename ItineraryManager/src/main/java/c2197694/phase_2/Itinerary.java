@@ -109,7 +109,7 @@ public class Itinerary {
      *
      * @return A random itinerary reference.
      */
-    private final String generateId() {
+    private String generateId() {
         // Generate two random letters
         String randomLetters = generateRandomString(LETTERS, 2);
 
@@ -154,7 +154,6 @@ public class Itinerary {
     protected void addActivity(Activity activity) {
         if (!activities.contains(activity)) {
             activities.add(activity);
-//            System.out.println(activity.getTitle() + " was added to the itinerary");
         } else {
             System.out.println(activity.getTitle() + " already exists in your list of activities!");
         }
@@ -168,7 +167,6 @@ public class Itinerary {
     protected void addAddOn(AddOn addOn) {//adds itinerary addons
         if (!addOns.contains(addOn)) {
             addOns.add(addOn);
-//            System.out.println(addOn.getName() + " was added to the itinerary");
         } else {
             System.out.println(addOn.getName() + " already exists in list of itinerary add-ons!");
         }
@@ -387,14 +385,14 @@ public class Itinerary {
     }
 
     /**
-     * Calculates the discount value but in base format for further
+     * Determines the discount value but in base format for further
      * calculations. This is due to different methods requiring different
      * formats and this method is a capsulation that can be used in different
      * ways.
      *
      * @return Base discount value.
      */
-    private int calculateDiscountPercentage() {
+    private int getDiscountMultiplier() {
         int attendeeDiscount = 0;
 
         if (attendee.getMembers() >= 10 && attendee.getMembers() < 20) {
@@ -430,7 +428,7 @@ public class Itinerary {
      */
     private double calculateDiscountInPounds() {
         double totalCost = calculateCost();
-        int discountRate = calculateDiscountPercentage();
+        int discountRate = getDiscountMultiplier();
         // Calculate the discount amount
         double discountPercentage = (100 - (double) discountRate) / 100.0;
         // Subtract the discount amount from the total cost
@@ -632,7 +630,7 @@ public class Itinerary {
             for (AddOn addOn : addOns) {
                 System.out.println("| - " + addOn.getName()
                         + " @ £" + addOn.getCost() / 100 + " x " + attendee.getMembers()
-                        + " = £" + itineraryAddOnSubTotal + "\t\t\t\t|");
+                        + " = £" + (addOn.getCost() / 100) * attendee.getMembers() + "\t\t\t\t\t|");
             }
             System.out.println("|\t\t\t\t\t\t\t\t|");
         }
@@ -648,7 +646,7 @@ public class Itinerary {
         double totalDiscount = calculateDiscountInPounds();
         // Format the total discount to display up to 1 digit after the decimal point
         String formattedTotalDiscount = String.format("%.1f", totalDiscount);
-        System.out.println("| " + (100 - calculateDiscountPercentage()) + "% Discount"
+        System.out.println("| " + (100 - getDiscountMultiplier()) + "% Discount"
                 + "\t\t\t\tTotal discount:\t£" + formattedTotalDiscount + "\t|");
         System.out.println("+===============================================================+");
     }
