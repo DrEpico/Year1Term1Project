@@ -246,31 +246,38 @@ public class Itinerary {
      * formats and this method is a capsulation that can be used in different
      * ways.
      *
-     * @return Base discount value.
+     * @return Discount multiplier.
      */
     private int getDiscountMultiplier() {
-        //splitted the discount calculatin logic from total cost calculation
-        int attendeeDiscount = 0;
-        
-        if (attendee.getMembers() >= 10 && attendee.getMembers() < 20) {
-            attendeeDiscount = 5;
-        } else if (attendee.getMembers() >= 20) {
-            attendeeDiscount = 8;
+        int discountPercentage = 0;
+
+        if (attendee.getMembers() >= 10 && attendee.getMembers() <= 20
+                && activities.size() <= 2) {
+            discountPercentage = 5;
+        } else if (attendee.getMembers() > 20
+                && activities.size() <= 2) {
+            discountPercentage = 8;
+        } else if (attendee.getMembers() < 10
+                && activities.size() >= 3 && activities.size() <= 5) {
+            discountPercentage = 5;
+        } else if (attendee.getMembers() >= 10 && attendee.getMembers() <= 20
+                && activities.size() >= 3 && activities.size() <= 5) {
+            discountPercentage = 8;
+        } else if (attendee.getMembers() > 20
+                && activities.size() >= 3 && activities.size() <= 5) {
+            discountPercentage = 12;
+        } else if (attendee.getMembers() < 10
+                && activities.size() >= 6) {
+            discountPercentage = 10;
+        } else if (attendee.getMembers() >= 10 && attendee.getMembers() <= 20
+                && activities.size() >= 6) {
+            discountPercentage = 12;
+        } else if (attendee.getMembers() > 20
+                && activities.size() >= 6) {
+            discountPercentage = 14;
         }
-
-        int activityDiscount = 0;
-        if (activities.size() >= 3 && activities.size() <= 5) {
-            activityDiscount = 5;
-        } else if (activities.size() > 5 && activities.size() <= 6) {
-            activityDiscount = 10;
-        } else if (activities.size() > 6) {
-            activityDiscount = 12;
-        }
-
-        int totalDiscount = 100 - attendeeDiscount;
-        totalDiscount = (totalDiscount * (100 - activityDiscount)) / 100;
-
-        return totalDiscount;
+        int multiplier = 100 - discountPercentage;
+        return multiplier;
     }
 
     /**
