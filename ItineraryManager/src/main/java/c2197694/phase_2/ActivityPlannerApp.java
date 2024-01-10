@@ -37,42 +37,66 @@ public class ActivityPlannerApp {
      * These activity objects will then be added to the relevant array-list in
      * itinerary class.
      */
-    private final Activity paperBridge = new Activity(
+    private static final Activity paperBridge = new Activity(
             500,
             "Building a bridge from paper",
             1,
             "Let's build a bridge from paper!",
             "Teesside University",
-            "16th Dec 15:00",
+            "16th Jan 15:00",
             2,
-            false);
-    private final Activity assaultCourse = new Activity(
+            false
+    );
+    private static final Activity assaultCourse = new Activity(
             9000,
             "SAS-style assault courses",
             2,
             "Become stronks",
             "Saltburn",
-            "15th Dec 7:00",
+            "15th Jan 7:00",
             15,
-            true);
-    private final Activity cookery = new Activity(
+            true
+    );
+    private static final Activity cookery = new Activity(
             1000,
             "Cookery class",
             3,
-            "Let bro cook",
+            "Improve your cooking skills!",
             "Teesside University",
-            "9th Dec 14:00",
+            "20th Jan 14:00",
             3,
-            false);
-    private final Activity hiking = new Activity(
+            false
+    );
+    private static final Activity hiking = new Activity(
             3000,
             "Hiking and nature walks",
             4,
             "Hiking time!",
             "North York Moors Park",
-            "8th Dec 14:00",
+            "22nd Jan 14:00",
             6,
-            true);
+            true
+    );
+    private static final Activity photographyWorkshop = new Activity(
+            1300,
+            "Photography Workshop",
+            5,
+            "Learn the art of photography",
+            "Photography Studio, City Center",
+            "20th Jan 10:00",
+            4,
+            false
+    );
+    private static final Activity pottery = new Activity(
+            1600,
+            "Pottery Making",
+            6,
+            "Unleash your creativity!",
+            "Artistic Pottery Studio",
+            "17th Jan 16:30",
+            3,
+            false
+    );
 
     /**
      * Activity planner app constructor initialises activities list and adds
@@ -84,6 +108,8 @@ public class ActivityPlannerApp {
         this.addActivity(assaultCourse);
         this.addActivity(cookery);
         this.addActivity(hiking);
+        this.addActivity(photographyWorkshop);
+        this.addActivity(pottery);
     }
 
     /**
