@@ -61,6 +61,8 @@ public class Itinerary {
     private final AddOn accommodation = new AddOn("Accommodation", 1700, "itinerary", "ACC");
     private final AddOn teaBreaks = new AddOn("Tea break", 500, "itinerary", "TEA");
     private final AddOn lunch = new AddOn("Lunch", 1500, "itinerary", "LUN");
+    private final AddOn nightEntertainment = new AddOn("Night Entertainment Package", 1900, "itinerary", "NEP");
+    private final AddOn explorerJournal = new AddOn("Explorer's Journal Kit", 800, "itinerary", "EJK");
 
     private final Scanner scanner = new Scanner(System.in);
 
@@ -84,6 +86,8 @@ public class Itinerary {
         this.addDisplayAddOns(accommodation);
         this.addDisplayAddOns(teaBreaks);
         this.addDisplayAddOns(lunch);
+        this.addDisplayAddOns(nightEntertainment);
+        this.addDisplayAddOns(explorerJournal); 
     }
 
     /**
