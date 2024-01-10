@@ -36,6 +36,8 @@ public class Activity{
     private final AddOn insurance = new AddOn("Insurance", 1300, "activity");
     private final AddOn travel = new AddOn("Travel", 1000, "activity");
     private final AddOn photography = new AddOn("Photography", 1400, "activity");
+    private final AddOn extension = new AddOn("1 hour extension", 1200, "activity");
+    private final AddOn privateGuide = new AddOn("Private Guide", 1800, "activity");
     
     /**
      * Parameterized constructor for creating an activity.
@@ -213,6 +215,16 @@ public class Activity{
     protected AddOn getPhotographyAddOn(){
         return photography;
     }
+    
+    protected AddOn getExtension(){
+        return extension;
+    }
+    
+    protected AddOn getPrivatGuide(){
+        return privateGuide;
+    }
+    
+    
     
     /**
      * Generic setter methods.

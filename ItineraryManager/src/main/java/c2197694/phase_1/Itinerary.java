@@ -42,8 +42,10 @@ public class Itinerary {
      * Itinerary add-ons are instantiated in the Itinerary class.
      */
     private final AddOn accommodation = new AddOn("Accommodation", 1700, "itinerary");
-    private final AddOn teaBreak = new AddOn("Coffee/Tea breaks", 500, "itinerary");
+    private final AddOn teaBreaks = new AddOn("Coffee/Tea breaks", 500, "itinerary");
     private final AddOn lunch = new AddOn("Lunch", 1700, "itinerary");
+    private final AddOn nightEntertainment = new AddOn("Night Entertainment Package", 1900, "itinerary");
+    private final AddOn explorerJournal = new AddOn("Explorer's Journal Kit", 800, "itinerary");
 
     Scanner scanner = new Scanner(System.in);
 
@@ -310,10 +312,18 @@ public class Itinerary {
     }
     
     protected AddOn getTeaBreakAddOn(){
-        return teaBreak;
+        return teaBreaks;
     }
     
     protected AddOn getLunchAddOn(){
         return lunch;
+    }
+    
+    protected AddOn getnightEntertainment(){
+        return nightEntertainment;
+    }
+    
+    protected AddOn getExplorerJournal(){
+        return explorerJournal;
     }
 }
